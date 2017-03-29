@@ -1,0 +1,23 @@
+.losses-and-adjustments {
+    display: flex;
+    font-weight: bold;
+    width: 100%;
+
+    &::before {
+        content: '\f044';
+        font-family: 'FontAwesome';
+        font-weight: normal;
+        margin-right: auto;
+    }
+
+    &:hover {
+        text-decoration: none;
+    }
+
+    &.disabled {
+
+        &::before {
+            content: '\f08e';
+        }
+    }
+}

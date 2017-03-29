@@ -1,0 +1,51 @@
+<div class="page">
+    <h2>{{'label.users' | message}}</h2>
+    <section class="openlmis-table-container">
+        <button ng-click="vm.goToCreateNewUser()" class="primary">{{'button.addUser' | message}}</button>
+        <form ng-submit="vm.search()">
+            <fieldset class="form-group">
+                <label for="firstName">{{'label.firstName' | message}}</label>
+                <input type="text" id="firstName" ng-model="vm.stateParams.firstName"/>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="lastName">{{'label.lastName' | message}}</label>
+                <input type="text" id="lastName" ng-model="vm.stateParams.lastName"/>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="email">{{'label.email' | message}}</label>
+                <input type="text" id="email" ng-model="vm.stateParams.email"/>
+            </fieldset>
+            <input type="submit" value="{{'button.search'|message}}"/>
+        </form>
+        <table>
+            <caption ng-if="!vm.items || vm.items.length === 0">
+                {{'error.noMatchesForUser' | message}}
+            </caption>
+            <thead>
+                <tr>
+                    <th>{{'label.name' | message}}</th>
+                    <th>{{'label.username' | message}}</th>
+                    <th>{{'label.email' | message}}</th>
+                    <th>{{'label.actions' | message}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="user in vm.items">
+                    <td>{{user.firstName}} {{user.lastName}}</td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.email}}</td>
+                    <td>
+                        <a ng-click="vm.editUser(user.id)">{{'link.edit' | message}}</a>
+                        <a ng-click="vm.resetUserPassword(user.id)">{{'link.resetPassword' | message}}</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <openlmis-pagination ng-model="vm.stateParams.page"
+            ng-change="vm.changePage()"
+            total-items="vm.totalItems"
+            items="vm.pageItems.length"
+            page-size="vm.stateParams.size">
+        </openlmis-pagination>
+    </section>
+</div>

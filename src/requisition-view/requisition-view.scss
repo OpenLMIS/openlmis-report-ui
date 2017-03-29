@@ -1,0 +1,10 @@
+
+.nav > li.is-invalid > a {
+	@include icon('exclamation-circle');
+	padding-right: 2em;
+	&:before{
+		color: $brand-danger;
+		position: absolute;
+		right: 0.5em;
+	}
+}

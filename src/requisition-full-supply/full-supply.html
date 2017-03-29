@@ -1,0 +1,33 @@
+<div class="openlmis-table-container">
+	<h4 ng-show="vm.areSkipControlsVisible()">{{'requisition.lineItem.skip' | message}}</h4>
+	<ul ng-show="vm.areSkipControlsVisible()">
+		<li><a ng-click="vm.skipAll()">{{'requisition.lineItem.skip.all' | message}}</a></li>
+		<li><a ng-click="vm.unskipAll()">{{'requisition.lineItem.skip.none' | message}}</a></li>
+	</ul>
+	<table>
+		<thead>
+			<tr>
+				<th class="col-{{column.name}}" ng-repeat="column in vm.columns | orderBy : 'displayOrder'" ng-class="{'col-sticky': !column.$canChangeOrder}" popover="{{column.definition}}">{{column.label}}
+				</th>
+			</tr>
+		</thead>
+		<tbody tbody-title="{{category}}" ng-repeat="(category, lineItems) in vm.pageItems | groupBy:'$program.orderableCategoryDisplayName'">
+			<tr ng-class="{'invalid-row': !vm.isLineItemValid(lineItem), 'skipped-line-item' : lineItem.skipped}"
+				ng-repeat="lineItem in lineItems | orderBy : '$program.displayOrder'">
+				{{lineItem}}
+				<td ng-repeat="column in vm.columns | orderBy : 'displayOrder'"
+					 product-grid-cell
+					 requisition="vm.requisition"
+					 column="column"
+					 line-item="lineItem" ></td>
+			</tr>
+		</tbody>
+	</table>
+	<openlmis-pagination ng-model="vm.stateParams.page"
+		total-items="vm.totalItems"
+		items="vm.pageItems.length"
+		page-size="vm.stateParams.size"
+		ng-change="vm.changePage()"
+		page-validator="vm.isPageValid" >
+	</openlmis-pagination>
+</div>
