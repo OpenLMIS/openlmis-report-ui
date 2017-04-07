@@ -62,7 +62,7 @@ describe('ReportListController', function() {
 
         rootScope.$apply();
 
-        expect(state.go).toHaveBeenCalledWith('openlmis.reports.generate', {
+        expect(state.go).toHaveBeenCalledWith('reports.generate', {
             module: reports[0].$module,
             report: reports[0].id
         });

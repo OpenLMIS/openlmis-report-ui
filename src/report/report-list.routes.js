@@ -25,7 +25,7 @@
 
     function config($stateProvider, REPORT_RIGHTS) {
 
-        $stateProvider.state('openlmis.reports.list', {
+        $stateProvider.state('reports.list', {
             controller: 'ReportListController',
             controllerAs: 'vm',
             label: 'link.viewReports',

@@ -25,7 +25,7 @@
 
     function config($stateProvider, REPORT_RIGHTS) {
 
-        $stateProvider.state('openlmis.reports.generate', {
+        $stateProvider.state('reports.generate', {
             controller: 'ReportGenerateController',
             controllerAs: 'vm',
             templateUrl: 'report/report-generate.html',
