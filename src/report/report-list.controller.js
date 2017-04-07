@@ -58,7 +58,7 @@
          * @param {String} reportId Report UUID
          */
         function goToReport(report) {
-            $state.go('reports.generate', {
+            $state.go('openlmis.reports.generate', {
                 module: report.$module,
                 report: report.id
             });
