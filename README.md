@@ -54,7 +54,7 @@ the UI module.
 
 ```shell
 > docker-compose pull
-> docker-compose run ./build.sh report-ui
+> docker-compose run --entrypoint ./build.sh report-ui
 > docker-compose build image
 ```
 
