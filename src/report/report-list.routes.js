@@ -28,7 +28,7 @@
         $stateProvider.state('reports.list', {
             controller: 'ReportListController',
             controllerAs: 'vm',
-            label: 'link.viewReports',
+            label: 'report.viewReports',
             showInNavigation: true,
             templateUrl: 'report/report-list.html',
             url: '/list',

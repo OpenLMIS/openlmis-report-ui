@@ -30,7 +30,7 @@
             url: '/reports',
             showInNavigation: true,
             priority: 1,
-            label: 'link.reports',
+            label: 'report.reports',
             template: '<div ui-view></div>'
         });
     }

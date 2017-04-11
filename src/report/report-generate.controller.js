@@ -41,8 +41,8 @@
         vm.downloadReport = downloadReport;
 
         vm.paramsInfo = {
-            'GeographicZone': 'label.report.geographicZoneInfo',
-            'DueDays': 'label.report.dueDaysInfo'
+            'GeographicZone': 'report.geographicZoneInfo',
+            'DueDays': 'report.dueDaysInfo'
         };
 
         /**
