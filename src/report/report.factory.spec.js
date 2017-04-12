@@ -49,6 +49,10 @@ describe('reportFactory', function() {
             selectProperty: 'code',
             displayProperty: 'name'
         };
+        paramStatus = {
+            name: 'status',
+            options: ['alive', 'dead']
+        };
         periodOptions = [
             { name: 'Q1' },
             { name: 'Q2' },
@@ -62,7 +66,11 @@ describe('reportFactory', function() {
             id: REPORT_ID,
             templateParameters: [paramPeriod, paramFacility]
         };
-        report2 = { id: REPORT_ID2 };
+        report2 = {
+            id: REPORT_ID2,
+            templateParameters: [paramStatus]
+
+        };
 
         reportServiceMock.getReport.andCallFake(function(module, id) {
             if (module === REQUISITIONS) {
@@ -141,6 +149,23 @@ describe('reportFactory', function() {
         paramOptions;
 
         reportFactory.getReportParamsOptions(report).then(function(data) {
+            paramOptions = data;
+        });
+        $rootScope.$apply();
+
+        expect(paramOptions).toEqual(expectedResult);
+    });
+
+    it('should populate report param options with predefined list', function() {
+        var expectedResult = {
+            'status': [
+                { name: 'alive', value: 'alive'},
+                { name: 'dead', value: 'dead'}
+            ]
+        },
+        paramOptions;
+
+        reportFactory.getReportParamsOptions(report2).then(function(data) {
             paramOptions = data;
         });
         $rootScope.$apply();

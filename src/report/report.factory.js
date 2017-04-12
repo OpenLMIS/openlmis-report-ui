@@ -91,7 +91,7 @@
         /**
          * @ngdoc method
          * @methodOf report.reportFactory
-         * @name getReportParamsOptions
+         * @name getAllReports
          *
          * @description
          * Retrieves all reports, from all available modules. Currently 'requisitions' is the only
@@ -152,6 +152,17 @@
                         parameters[param.name] = params;
                         paramDeferred.resolve();
                     }, paramDeferred.reject);
+                } else if (param.options != null) {
+                    promises.push(paramDeferred.promise);
+
+                    var items = param.options.map(function(option) {
+                        return {
+                            'name': option,
+                            'value': option
+                        };
+                    });
+                    parameters[param.name] = items;
+                    paramDeferred.resolve();
                 }
             });
 
