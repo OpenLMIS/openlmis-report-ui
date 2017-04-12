@@ -37,4 +37,4 @@ services:
       - '/openlmis-ui-layout'
   image:
     build: .
-    image: openlmis/report-ui:4.0.1-SNAPSHOT
+    image: openlmis/report-ui
