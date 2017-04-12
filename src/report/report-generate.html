@@ -14,7 +14,7 @@
             <input ng-switch-when="java.lang.Integer" positive-integer
                    ng-model="vm.selectedParamsOptions[parameter.name]" ng-required="{{parameter.required}}"/>
             <input ng-switch-default ng-model="vm.selectedParamsOptions[parameter.name]"
-                   ng-required="{{parameter.required}}" aria-labelledby="infolabelForInteger"/>
+                   ng-required="{{parameter.required}}" type="text" aria-labelledby="infolabelForInteger"/>
             <p class="param-info" ng-if="vm.paramsInfo[parameter.name]" id="infoLabelForInteger">
                 {{vm.paramsInfo[parameter.name] | message}}</p>
         </span>
