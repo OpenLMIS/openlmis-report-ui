@@ -25,20 +25,26 @@
 
     function config($stateProvider, REPORT_RIGHTS) {
 
-        $stateProvider.state('openlmis.reports.generate', {
-            controller: 'ReportGenerateController',
-            controllerAs: 'vm',
-            templateUrl: 'report/report-generate.html',
+        $stateProvider.state('openlmis.reports.list.generate', {
+            label: 'report.generateReport',
+
             url: '/:module/:report/options',
             accessRights: [
                 REPORT_RIGHTS.REPORTS_VIEW
             ],
-            resolve: {
-                report: function($stateParams, reportFactory) {
-                    return reportFactory.getReport($stateParams.module, $stateParams.report);
-                },
-                reportParamsOptions: function(report, reportFactory) {
-                    return reportFactory.getReportParamsOptions(report);
+            views: {
+                '@openlmis': {
+                    controller: 'ReportGenerateController',
+                    controllerAs: 'vm',
+                    templateUrl: 'report/report-generate.html',
+                    resolve: {
+                        report: function($stateParams, reportFactory) {
+                            return reportFactory.getReport($stateParams.module, $stateParams.report);
+                        },
+                        reportParamsOptions: function(report, reportFactory) {
+                            return reportFactory.getReportParamsOptions(report);
+                        }
+                    }
                 }
             }
         });

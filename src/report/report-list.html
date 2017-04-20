@@ -1,20 +1,18 @@
-<div class="page">
-    <h2>{{'report.viewReports' | message}}</h2>
-    <div class="openlmis-table-container">
-        <table>
-            <caption class="error" ng-if="!vm.reports.length">{{'message.no.reports' | message}}</caption>
-            <thead>
-                <tr>
-                    <th>{{'report.report' | message}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="report in vm.reports">
-                    <td>
-                        <a ng-click="vm.goToReport(report)">{{report.name}}</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+<h2>{{'report.viewReports' | message}}</h2>
+<div class="openlmis-table-container">
+    <table>
+        <caption class="error" ng-if="!vm.reports.length">{{'message.no.reports' | message}}</caption>
+        <thead>
+            <tr>
+                <th>{{'report.report' | message}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="report in vm.reports">
+                <td>
+                    <a ui-sref=".generate({module: report.$module, report: report.id})">{{report.name}}</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

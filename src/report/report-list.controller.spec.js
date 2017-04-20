@@ -54,17 +54,4 @@ describe('ReportListController', function() {
     it('should set report list', function() {
         expect(vm.reports).toEqual(reports);
     });
-
-    it('should go to report options page', function() {
-        spyOn(state, 'go').andReturn();
-
-        vm.goToReport(reports[0]);
-
-        rootScope.$apply();
-
-        expect(state.go).toHaveBeenCalledWith('openlmis.reports.generate', {
-            module: reports[0].$module,
-            report: reports[0].id
-        });
-    });
 });

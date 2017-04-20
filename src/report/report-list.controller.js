@@ -44,24 +44,5 @@
          * The list of all available reports.
          */
         vm.reports = reports;
-
-        vm.goToReport = goToReport;
-
-        /**
-         * @ngdoc method
-         * @methodOf report.controller:ReportListController
-         * @name goToReport
-         *
-         * @description
-         * Redirects user to report options page.
-         *
-         * @param {String} reportId Report UUID
-         */
-        function goToReport(report) {
-            $state.go('openlmis.reports.generate', {
-                module: report.$module,
-                report: report.id
-            });
-        }
     }
 })();
