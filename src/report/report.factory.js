@@ -35,6 +35,7 @@
             getReport: getReport,
             getReports: getReports,
             getAllReports: getAllReports,
+            getReportParamOptions: getReportParamOptions,
             getReportParamsOptions: getReportParamsOptions
         };
         return factory;
@@ -141,15 +142,14 @@
             angular.forEach(report.templateParameters, function(param) {
                 var paramDeferred = $q.defer();
 
-                if (param.selectExpression != null) {
+                if (param.dependencies && param.dependencies.length > 0) {
+                    parameters[param.name] = [];
+                    paramDeferred.resolve();
+                } else if (param.selectExpression != null) {
                     promises.push(paramDeferred.promise);
 
-                    getReportParamOptions(
-                        param.selectExpression,
-                        param.selectProperty,
-                        param.displayProperty
-                    ).then(function(params) {
-                        parameters[param.name] = params;
+                    getReportParamOptions(param).then(function(items) {
+                        parameters[param.name] = items;
                         paramDeferred.resolve();
                     }, paramDeferred.reject);
                 } else if (param.options != null) {
@@ -161,6 +161,7 @@
                             'value': option
                         };
                     });
+
                     parameters[param.name] = items;
                     paramDeferred.resolve();
                 }
@@ -194,8 +195,11 @@
                                           provided, the value will be used as a display name.
          * @return {Promise}              The promise for report params.
          */
-        function getReportParamOptions(uri, property, displayName) {
+        function getReportParamOptions(parameter, attributes) {
             var deferred = $q.defer();
+            var uri = getReportParamSelectExpressionUri(parameter, attributes);
+            var property = parameter.selectProperty;
+            var displayName = parameter.displayProperty;
 
             reportService.getReportParamsOptions(uri).then(function(response) {
                 var items = [];
@@ -223,6 +227,22 @@
 
             return deferred.promise;
         }
+    }
+
+    function getReportParamSelectExpressionUri(parameter, attributes) {
+        var uri = parameter.selectExpression;
+        var dependencies = parameter.dependencies || [];
+
+        if (attributes && dependencies.length > 0) {
+            uri = uri + '?';
+            angular.forEach(dependencies, function(param) {
+                if (attributes[param.dependency]) {
+                  uri += param.placeholder + '=' + attributes[param.dependency] + '&&';
+                }
+            });
+        }
+
+        return uri;
     }
 
 })();
