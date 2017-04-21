@@ -186,13 +186,9 @@
          * with a 'value' and a 'displayName'
          * property.
          *
-         * @param  {String}   uri         The uri under which the param options will be retrieved.
-         * @param  {String}   property    The name of the property that will be treated as the value
-         *                                of the param (from the retrieved JSON). If not provided,
-         *                                the object itself will be treated as the value.
-         * @param  {String}   displayName The name of the property that will be treated as the display
-         *                                name of the param (from the retrieved JSON). If not
-                                          provided, the value will be used as a display name.
+         * @param  {String}   parameter   The parameter for which the options will be retrieved.
+         * @param  {String}   attributes  The optional mapping for parameter url placeholders.
+         *
          * @return {Promise}              The promise for report params.
          */
         function getReportParamOptions(parameter, attributes) {

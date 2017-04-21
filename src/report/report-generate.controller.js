@@ -38,8 +38,6 @@
                         reportParamsOptions, reportUrlFactory, accessTokenFactory) {
         var vm = this;
 
-        $scope.vm = vm;
-
         vm.$onInit = onInit;
 
         vm.downloadReport = downloadReport;
@@ -63,17 +61,6 @@
         /**
          * @ngdoc property
          * @propertyOf report.controller:ReportGenerateController
-         * @name reportFactory
-         * @type {Object}
-         *
-         * @description
-         * The object representing the reports factory.
-         */
-        vm.reportFactory = reportFactory;
-
-        /**
-         * @ngdoc property
-         * @propertyOf report.controller:ReportGenerateController
          * @name paramsOptions
          * @type {Array}
          *
@@ -88,13 +75,22 @@
          * @ngdoc property
          * @propertyOf report.controller:ReportGenerateController
          * @name selectedParamsOptions
-         * @type {Array}
+         * @type {Object}
          *
          * @description
          * The collection of selected options by param name.
          */
         vm.selectedParamsOptions = {};
 
+        /**
+         * @ngdoc property
+         * @propertyOf report.controller:ReportGenerateController
+         * @name selectedParamsDependencies
+         * @type {Object}
+         *
+         * @description
+         * The collection of parameter dependencies and their selected values.
+         */
         vm.selectedParamsDependencies = {};
 
         /**
@@ -140,13 +136,17 @@
          * @description
          * Sets up a watch on report parameter selection,
          * to update dependent parameters options based on it's value.
+         *
+         * @param   {Object}    param             the report parameter that needs to watch for
+         *                                        dependency.
+         * @param   {Object}    dep               the dependency object to set up watch for.
          */
         function watchDependency(param, dep) {
             var watchProperty = 'vm.selectedParamsOptions.' + dep.dependency;
             $scope.$watch(watchProperty, function(newVal, oldVal) {
                 vm.selectedParamsDependencies[dep.placeholder] = newVal;
                 if (newVal) {
-                    vm.reportFactory.getReportParamOptions(param, vm.selectedParamsDependencies)
+                    reportFactory.getReportParamOptions(param, vm.selectedParamsDependencies)
                     .then(function(items) {
                         vm.paramsOptions[param.name] = items;
                     });
