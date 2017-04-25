@@ -41,17 +41,20 @@ describe('reportFactory', function() {
         paramPeriod = {
             name: 'periods',
             selectExpression: '/api/periods',
-            selectProperty: 'name'
+            selectProperty: 'name',
+            dependencies: []
         };
         paramFacility = {
             name: 'facilities',
             selectExpression: '/api/facilities',
             selectProperty: 'code',
-            displayProperty: 'name'
+            displayProperty: 'name',
+            dependencies: []
         };
         paramStatus = {
             name: 'status',
-            options: ['alive', 'dead']
+            options: ['alive', 'dead'],
+            dependencies: []
         };
         periodOptions = [
             { name: 'Q1' },
@@ -166,6 +169,27 @@ describe('reportFactory', function() {
         paramOptions;
 
         reportFactory.getReportParamsOptions(report2).then(function(data) {
+            paramOptions = data;
+        });
+        $rootScope.$apply();
+
+        expect(paramOptions).toEqual(expectedResult);
+    });
+
+    it('should not retrieve options for report param with dependencies', function() {
+        paramFacility.dependencies.push('periods');
+
+        var expectedResult = {
+            'periods': [
+                { name: 'Q1', value: 'Q1'},
+                { name: 'Q2', value: 'Q2'},
+                { name: 'Q3', value: 'Q3'}
+            ],
+            'facilities': []
+        },
+        paramOptions;
+
+        reportFactory.getReportParamsOptions(report).then(function(data) {
             paramOptions = data;
         });
         $rootScope.$apply();

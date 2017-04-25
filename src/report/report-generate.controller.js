@@ -30,13 +30,15 @@
         .controller('ReportGenerateController', controller);
 
     controller.$inject = [
-        '$state', '$window', 'report', 'reportParamsOptions', 'reportUrlFactory',
-        'accessTokenFactory'
+        '$state', '$scope', '$window', 'report', 'reportFactory',
+        'reportParamsOptions', 'reportUrlFactory', 'accessTokenFactory'
     ];
 
-    function controller($state, $window, report, reportParamsOptions, reportUrlFactory,
-                        accessTokenFactory) {
+    function controller($state, $scope, $window, report, reportFactory,
+                        reportParamsOptions, reportUrlFactory, accessTokenFactory) {
         var vm = this;
+
+        vm.$onInit = onInit;
 
         vm.downloadReport = downloadReport;
 
@@ -73,12 +75,23 @@
          * @ngdoc property
          * @propertyOf report.controller:ReportGenerateController
          * @name selectedParamsOptions
-         * @type {Array}
+         * @type {Object}
          *
          * @description
          * The collection of selected options by param name.
          */
         vm.selectedParamsOptions = {};
+
+        /**
+         * @ngdoc property
+         * @propertyOf report.controller:ReportGenerateController
+         * @name selectedParamsDependencies
+         * @type {Object}
+         *
+         * @description
+         * The collection of parameter dependencies and their selected values.
+         */
+        vm.selectedParamsDependencies = {};
 
         /**
          * @ngdoc property
@@ -112,6 +125,49 @@
                 ),
                 '_blank'
             );
+        }
+
+
+        /**
+         * @ngdoc method
+         * @methodOf report.controller:ReportGenerateController
+         * @name watchDependency
+         *
+         * @description
+         * Sets up a watch on report parameter selection,
+         * to update dependent parameters options based on it's value.
+         *
+         * @param   {Object}    param             the report parameter that needs to watch for
+         *                                        dependency.
+         * @param   {Object}    dep               the dependency object to set up watch for.
+         */
+        function watchDependency(param, dep) {
+            var watchProperty = 'vm.selectedParamsOptions.' + dep.dependency;
+            $scope.$watch(watchProperty, function(newVal, oldVal) {
+                vm.selectedParamsDependencies[dep.placeholder] = newVal;
+                if (newVal) {
+                    reportFactory.getReportParamOptions(param, vm.selectedParamsDependencies)
+                    .then(function(items) {
+                        vm.paramsOptions[param.name] = items;
+                    });
+                }
+            });
+        }
+
+        /**
+         * @ngdoc method
+         * @methodOf report.controller:ReportGenerateController
+         * @name $onInit
+         *
+         * @description
+         * Initialization method of the ReportGenerateController.
+         */
+        function onInit() {
+            angular.forEach(report.templateParameters, function(param) {
+                angular.forEach(param.dependencies, function(dependency) {
+                    watchDependency(param, dependency);
+                });
+            });
         }
     }
 })();
