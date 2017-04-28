@@ -9,5 +9,6 @@
         "/openlmis-referencedata-ui"
     ],
     "transifexProjectName": "openlmis-report-ui",
-    "defaultLanguage": "en"
+    "defaultLanguage": "en",
+    "REPORTING_SERVICES": "requisitions"
 }

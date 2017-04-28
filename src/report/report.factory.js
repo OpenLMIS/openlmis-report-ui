@@ -102,9 +102,10 @@
          */
         function getAllReports() {
             var promises = [],
-                deferred = $q.defer();
+                deferred = $q.defer(),
+                modules = getAvailableReportingModules();
 
-            angular.forEach(['requisitions'], function(module) {
+            angular.forEach(modules, function(module) {
                 promises.push(getReports(module));
             });
 
@@ -223,22 +224,59 @@
 
             return deferred.promise;
         }
-    }
 
-    function getReportParamSelectExpressionUri(parameter, attributes) {
-        var uri = parameter.selectExpression;
-        var dependencies = parameter.dependencies || [];
 
-        if (attributes && dependencies.length > 0) {
-            uri = uri + '?';
-            angular.forEach(dependencies, function(param) {
-                if (attributes[param.dependency]) {
-                  uri += param.placeholder + '=' + attributes[param.dependency] + '&&';
-                }
-            });
+        /**
+         * @ngdoc method
+         * @methodOf report.reportFactory
+         * @name getReportParamSelectExpressionUri
+         *
+         * @description
+         * Creates a select expression URI for parameter, including it's own expression
+         * and dependent report parameters.
+         *
+         * @param  {String}   parameter   The parameter for which the uri will be retrieved.
+         * @param  {String}   attributes  The optional mapping for parameter uri placeholders.
+         *
+         * @return {String}               The formed select expression uri.
+         */
+        function getReportParamSelectExpressionUri(parameter, attributes) {
+            var uri = parameter.selectExpression;
+            var dependencies = parameter.dependencies || [];
+
+            if (attributes && dependencies.length > 0) {
+                uri = uri + '?';
+                angular.forEach(dependencies, function(param) {
+                    if (attributes[param.dependency]) {
+                      uri += param.placeholder + '=' + attributes[param.dependency] + '&&';
+                    }
+                });
+            }
+
+            return uri;
         }
 
-        return uri;
+        /**
+         * @ngdoc method
+         * @methodOf report.reportFactory
+         * @name getAvailableReportingModules
+         *
+         * @description
+         * Retrieves available reporting services supported by module,
+         * based on REPORTING_SERVICES configuration setting.
+         *
+         * @return {Array}               An array containing names of reporting services.
+         */
+        function getAvailableReportingModules() {
+            var modules = [];
+
+            var srenv = '@@REPORTING_SERVICES';
+            if (srenv.substr(0, 2) != '@@') {
+                modules = srenv.split(',');
+            }
+
+            return modules;
+        }
     }
 
 })();
