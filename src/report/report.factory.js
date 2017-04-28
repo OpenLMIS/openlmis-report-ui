@@ -28,9 +28,9 @@
         .module('report')
         .factory('reportFactory', factory);
 
-    factory.$inject = ['$http', '$q', 'openlmisUrlFactory', 'reportService'];
+    factory.$inject = ['$http', '$q', 'openlmisUrlFactory', 'reportService', 'REPORTING_SERVICES'];
 
-    function factory($http, $q, openlmisUrlFactory, reportService) {
+    function factory($http, $q, openlmisUrlFactory, reportService, REPORTING_SERVICES) {
         var factory = {
             getReport: getReport,
             getReports: getReports,
@@ -103,10 +103,10 @@
         function getAllReports() {
             var promises = [],
                 deferred = $q.defer(),
-                modules = getAvailableReportingModules();
+                services = REPORTING_SERVICES;
 
-            angular.forEach(modules, function(module) {
-                promises.push(getReports(module));
+            angular.forEach(services, function(service) {
+                promises.push(getReports(service));
             });
 
             $q.all(promises).then(function(reportLists) {
@@ -254,28 +254,6 @@
             }
 
             return uri;
-        }
-
-        /**
-         * @ngdoc method
-         * @methodOf report.reportFactory
-         * @name getAvailableReportingModules
-         *
-         * @description
-         * Retrieves available reporting services supported by module,
-         * based on REPORTING_SERVICES configuration setting.
-         *
-         * @return {Array}               An array containing names of reporting services.
-         */
-        function getAvailableReportingModules() {
-            var modules = [];
-
-            var srenv = '@@REPORTING_SERVICES';
-            if (srenv.substr(0, 2) != '@@') {
-                modules = srenv.split(',');
-            }
-
-            return modules;
         }
     }
 
