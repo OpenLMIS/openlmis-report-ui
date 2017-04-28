@@ -117,7 +117,7 @@
             $window.open(
                 accessTokenFactory.addAccessToken(
                     reportUrlFactory.buildUrl(
-                        'requisitions',
+                        vm.report.$module,
                         vm.report,
                         vm.selectedParamsOptions,
                         vm.format

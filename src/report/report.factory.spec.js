@@ -27,9 +27,12 @@ describe('reportFactory', function() {
         module('report', function($provide) {
             reportServiceMock = jasmine.createSpyObj('reportService',
                 ['getReport', 'getReports', 'getReportParamsOptions']);
+
             $provide.service('reportService', function() {
                 return reportServiceMock;
             });
+
+            $provide.constant('REPORTING_SERVICES', ['requisitions']);
         });
 
         inject(function(_$rootScope_, _$q_, _reportFactory_) {
