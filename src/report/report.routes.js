@@ -29,7 +29,7 @@
             abstract: true,
             url: '/reports',
             showInNavigation: true,
-            priority: 1,
+            priority: 0,
             label: 'report.reports',
             template: '<div ui-view></div>'
         });
