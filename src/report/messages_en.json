@@ -1,15 +1,15 @@
 {
-    "report.chooseReportOptions": "Choose report options",
+    "report.chooseReportOptions": "Choose Report Options",
     "report.csv": "CSV",
     "report.dueDaysInfo": "Insert number of days past the period end date the requisitions are due by. Default is 10 days.",
     "report.format": "Format",
     "report.generate": "Generate",
-    "report.generateReport": "Generate report",
+    "report.generateReport": "Generate Report",
     "report.geographicZoneInfo": "If no option is selected, report will include all geographic zones.",
     "report.html": "HTML",
     "report.pdf": "PDF",
     "report.report": "Report",
     "report.reports": "Reports",
-    "report.viewReports": "View reports",
+    "report.viewReports": "View Reports",
     "report.xls": "XLS"
 }
