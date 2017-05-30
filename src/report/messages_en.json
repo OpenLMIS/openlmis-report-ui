@@ -7,6 +7,7 @@
     "report.generateReport": "Generate Report",
     "report.geographicZoneInfo": "If no option is selected, report will include all geographic zones.",
     "report.html": "HTML",
+    "report.noReports": "No Reports",
     "report.pdf": "PDF",
     "report.report": "Report",
     "report.reports": "Reports",
