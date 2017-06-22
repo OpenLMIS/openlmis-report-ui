@@ -1,3 +1,11 @@
+5.0.2 / 2017-06-22
+==================
+
+Bug fixes:
+
+* [MW-134](https://openlmis.atlassian.net/browse/MW-134): Added missing message
+
+
 5.0.1 / 2017-05-26
 ==================
 
