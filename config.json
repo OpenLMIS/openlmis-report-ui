@@ -10,5 +10,6 @@
     ],
     "transifexProjectName": "openlmis-report-ui",
     "defaultLanguage": "en",
-    "REPORTING_SERVICES": "requisitions"
+    "REPORTING_SERVICES": "requisitions,common"
 }
+
