@@ -198,7 +198,7 @@
             var property = parameter.selectProperty;
             var displayName = parameter.displayProperty;
 
-            reportService.getReportParamsOptions(uri).then(function(response) {
+            reportService.getReportParamsOptions(uri, parameter.selectMethod, parameter.selectBody).then(function(response) {
                 var items = [];
 
                 // Support paginated endpoints

@@ -94,11 +94,15 @@
          *                       uri under which options for the given report are available.
          * @return {Promise}     The promise for report params.
          */
-        function getReportParamsOptions(uri) {
-            return $http({
-                method: 'GET',
+        function getReportParamsOptions(uri, method, body) {
+            var request = {
+                method: method ? method: 'GET',
                 url: openlmisUrlFactory(uri)
-            });
+            };
+            if (method === 'POST') {
+                request.data = body ? angular.fromJson("{\"levelNumber\":\"2\"}") : {};
+            }
+            return $http(request);
         }
     }
 })();
