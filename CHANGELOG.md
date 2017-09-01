@@ -1,5 +1,9 @@
-5.0.3 / Current Snapshot
+5.0.3 / 2017-09-01
 ==================
+
+Big fixes:
+
+* [OLMIS-2911](https://openlmis.atlassian.net/browse/OLMIS-2911): Added http method and body to jasper template paramter
 
 5.0.2 / 2017-06-22
 ==================
