@@ -1,6 +1,8 @@
 5.0.4 / 2017-11-09
+==================
 
 Improvements:
+
 * Updated dev-ui version to 6.
 
 5.0.3 / 2017-09-01
