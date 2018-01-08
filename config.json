@@ -1,15 +1,10 @@
 {
-    "app": {
-        "src": "./src"
-    },
     "orderedBuildDirectories": [
         "/openlmis-ui-components",
         "/openlmis-auth-ui",
         "/openlmis-ui-layout",
         "/openlmis-referencedata-ui"
     ],
-    "transifexProjectName": "openlmis-report-ui",
-    "defaultLanguage": "en",
     "REPORTING_SERVICES": "requisitions,common"
 }
 
