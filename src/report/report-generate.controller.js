@@ -42,6 +42,8 @@
 
         vm.downloadReport = downloadReport;
 
+        vm.supportsFormat = supportsFormat;
+
         vm.paramsInfo = {
             'GeographicZone': 'report.geographicZoneInfo',
             'DueDays': 'report.dueDaysInfo'
@@ -92,6 +94,17 @@
          * The collection of parameter dependencies and their selected values.
          */
         vm.selectedParamsDependencies = {};
+
+        /**
+         * @ngdoc property
+         * @propertyOf report.controller:ReportGenerateController
+         * @name formats
+         * @type {String}
+         *
+         * @description
+         * Available formats.
+         */
+        vm.formats = [];
 
         /**
          * @ngdoc property
@@ -168,6 +181,20 @@
                     watchDependency(param, dependency);
                 });
             });
+            var defaultFormats = ['pdf', 'csv', 'xls', 'html'];
+            angular.forEach(report.supportedFormats, function(format) {
+                if (defaultFormats.indexOf(format) !== -1) {
+                    vm.formats.push(format);
+                }
+            });
+            if (vm.formats.length === 0) {
+                vm.formats = defaultFormats;
+            }
+            vm.format = vm.formats[0];
+        }
+
+        function supportsFormat(format) {
+            return vm.formats.indexOf(format) !== -1;
         }
     }
 })();
