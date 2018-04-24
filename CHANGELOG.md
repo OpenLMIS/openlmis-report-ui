@@ -1,5 +1,5 @@
-5.0.5 / WIP
-===========
+5.0.5 / 2018-04-24
+==================
 
 New features:
 * [OLMIS-3108:](https://openlmis.atlassian.net/browse/OLMIS-3108) Updated to use dev-ui v7 transifex build process
