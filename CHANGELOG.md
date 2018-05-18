@@ -1,3 +1,9 @@
+5.0.6 / WIP
+===========
+
+Improvements:
+* [OLMIS-4741](https://openlmis.atlassian.net/browse/OLMIS-4741): Added Jenkinsfile.
+
 5.0.5 / 2018-04-24
 ==================
 
