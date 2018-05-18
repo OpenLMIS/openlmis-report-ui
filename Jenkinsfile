@@ -43,7 +43,7 @@ pipeline {
 
                     sh 'docker-compose pull'
                     sh 'docker-compose down --volumes'
-                    sh 'docker-compose run --entrypoint /dev-ui/build.sh auth-ui'
+                    sh 'docker-compose run --entrypoint /dev-ui/build.sh report-ui'
                     sh 'docker-compose build image'
                     sh 'docker-compose down --volumes'
                 }
@@ -75,7 +75,7 @@ pipeline {
                             echo "SONAR_LOGIN=$SONAR_LOGIN_TEMP" >> .env
                             echo "SONAR_PASSWORD=$SONAR_PASSWORD_TEMP" >> .env
 
-                            docker-compose run --entrypoint ./sonar.sh auth-ui
+                            docker-compose run --entrypoint ./sonar.sh report-ui
                             docker-compose down --volumes
                         '''
                         // workaround because sonar plugin retrieve the path directly from the output
@@ -104,8 +104,8 @@ pipeline {
                 }
             }
             steps {
-                sh "docker tag openlmis/auth-ui:latest openlmis/auth-ui:${VERSION}"
-                sh "docker push openlmis/auth-ui:${VERSION}"
+                sh "docker tag openlmis/report-ui:latest openlmis/report-ui:${VERSION}"
+                sh "docker push openlmis/report-ui:${VERSION}"
             }
             post {
                 failure {
