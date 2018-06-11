@@ -4,6 +4,7 @@
 Improvements:
 * [OLMIS-4741](https://openlmis.atlassian.net/browse/OLMIS-4741): Added Jenkinsfile.
 * [OLMIS-4795](https://openlmis.atlassian.net/browse/OLMIS-4795): Updated dev-ui to version 8.
+* [OLMIS-4813](https://openlmis.atlassian.net/browse/OLMIS-4813): Updated ui-components to version 6.0.0.
 
 5.0.5 / 2018-04-24
 ==================
