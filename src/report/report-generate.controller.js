@@ -144,7 +144,7 @@
         function watchDependency(param, dep) {
             var watchProperty = 'vm.selectedParamsOptions.' + dep.dependency;
             $scope.$watch(watchProperty, function(newVal, oldVal) {
-                vm.selectedParamsDependencies[dep.placeholder] = newVal;
+                vm.selectedParamsDependencies[dep.dependency] = newVal;
                 if (newVal) {
                     reportFactory.getReportParamOptions(param, vm.selectedParamsDependencies)
                     .then(function(items) {
