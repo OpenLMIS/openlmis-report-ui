@@ -13,7 +13,6 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-
 (function() {
 
     'use strict';
@@ -43,8 +42,8 @@
         vm.downloadReport = downloadReport;
 
         vm.paramsInfo = {
-            'GeographicZone': 'report.geographicZoneInfo',
-            'DueDays': 'report.dueDaysInfo'
+            GeographicZone: 'report.geographicZoneInfo',
+            DueDays: 'report.dueDaysInfo'
         };
 
         /**
@@ -127,7 +126,6 @@
             );
         }
 
-
         /**
          * @ngdoc method
          * @methodOf report.controller:ReportGenerateController
@@ -143,13 +141,13 @@
          */
         function watchDependency(param, dep) {
             var watchProperty = 'vm.selectedParamsOptions.' + dep.dependency;
-            $scope.$watch(watchProperty, function(newVal, oldVal) {
+            $scope.$watch(watchProperty, function(newVal) {
                 vm.selectedParamsDependencies[dep.dependency] = newVal;
                 if (newVal) {
                     reportFactory.getReportParamOptions(param, vm.selectedParamsDependencies)
-                    .then(function(items) {
-                        vm.paramsOptions[param.name] = items;
-                    });
+                        .then(function(items) {
+                            vm.paramsOptions[param.name] = items;
+                        });
                 }
             });
         }

@@ -96,11 +96,11 @@
          */
         function getReportParamsOptions(uri, method, body) {
             var request = {
-                method: method ? method: 'GET',
+                method: method ? method : 'GET',
                 url: openlmisUrlFactory(uri)
             };
             if (method === 'POST') {
-                request.data = body ? angular.fromJson("{\"levelNumber\":\"2\"}") : {};
+                request.data = body ? angular.fromJson('{"levelNumber":"2"}') : {};
             }
             return $http(request);
         }

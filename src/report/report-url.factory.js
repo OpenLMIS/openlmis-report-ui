@@ -55,10 +55,10 @@
         function buildUrl(url, report, selectedValues, format) {
             url = pathFactory(reportUrl, url, report.id, format);
 
-            var requestParameters = "";
+            var requestParameters = '';
             angular.forEach(report.templateParameters, function(parameter) {
-                requestParameters = requestParameters + parameter.name + "=" +
-                    selectedValues[parameter.name] + "&&";
+                requestParameters = requestParameters + parameter.name + '=' +
+                    selectedValues[parameter.name] + '&&';
             });
 
             return openlmisUrlFactory(url + '?' + requestParameters);

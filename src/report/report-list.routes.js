@@ -36,7 +36,7 @@
                 REPORT_RIGHTS.REPORTS_VIEW
             ],
             resolve: {
-                reports: function (reportFactory) {
+                reports: function(reportFactory) {
                     return reportFactory.getAllReports();
                 }
             }

@@ -146,20 +146,20 @@
                 if (param.dependencies && param.dependencies.length > 0) {
                     parameters[param.name] = [];
                     paramDeferred.resolve();
-                } else if (param.selectExpression != null) {
+                } else if (param.selectExpression !== null && param.selectExpression !== undefined) {
                     promises.push(paramDeferred.promise);
 
                     getReportParamOptions(param).then(function(items) {
                         parameters[param.name] = items;
                         paramDeferred.resolve();
                     }, paramDeferred.reject);
-                } else if (param.options != null) {
+                } else if (param.options !== null && param.options !== undefined) {
                     promises.push(paramDeferred.promise);
 
                     var items = param.options.map(function(option) {
                         return {
-                            'name': option,
-                            'value': option
+                            name: option,
+                            value: option
                         };
                     });
 
@@ -198,33 +198,33 @@
             var property = parameter.selectProperty;
             var displayName = parameter.displayProperty;
 
-            reportService.getReportParamsOptions(uri, parameter.selectMethod, parameter.selectBody).then(function(response) {
-                var items = [];
+            reportService.getReportParamsOptions(uri, parameter.selectMethod, parameter.selectBody)
+                .then(function(response) {
+                    var items = [];
 
-                // Support paginated endpoints
-                var data = response.data;
-                if (data.content && data.totalElements > 0) {
-                  data = data.content;
-                }
-
-                angular.forEach(data, function(obj) {
-                    var value = property ? obj[property] : obj;
-                    var name = displayName ? obj[displayName] : value;
-
-                    if (value) {
-                        items.push({
-                            'name': name,
-                            'value': value
-                        });
+                    // Support paginated endpoints
+                    var data = response.data;
+                    if (data.content && data.totalElements > 0) {
+                        data = data.content;
                     }
-                });
 
-                deferred.resolve(items);
-            }, deferred.reject);
+                    angular.forEach(data, function(obj) {
+                        var value = property ? obj[property] : obj;
+                        var name = displayName ? obj[displayName] : value;
+
+                        if (value) {
+                            items.push({
+                                name: name,
+                                value: value
+                            });
+                        }
+                    });
+
+                    deferred.resolve(items);
+                }, deferred.reject);
 
             return deferred.promise;
         }
-
 
         /**
          * @ngdoc method
@@ -248,7 +248,7 @@
                 uri = uri + '?';
                 angular.forEach(dependencies, function(param) {
                     if (attributes[param.dependency]) {
-                      uri += param.placeholder + '=' + attributes[param.dependency] + '&&';
+                        uri += param.placeholder + '=' + attributes[param.dependency] + '&&';
                     }
                 });
             }

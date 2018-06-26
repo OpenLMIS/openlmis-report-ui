@@ -32,7 +32,7 @@
         var services = [];
 
         var srenv = '@@REPORTING_SERVICES';
-        if (srenv.substr(0, 2) != '@@') {
+        if (srenv.substr(0, 2) !== '@@') {
             services = srenv.split(',');
         }
 

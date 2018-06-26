@@ -13,7 +13,6 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-
 (function() {
 
     'use strict';
@@ -34,7 +33,7 @@
     function controller($state, reports) {
         var vm = this;
 
-       /**
+        /**
          * @ngdoc property
          * @propertyOf report.controller:ReportListController
          * @name reports
