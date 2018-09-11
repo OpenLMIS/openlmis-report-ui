@@ -13,56 +13,62 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
+describe('reportUrlFactory', function() {
 
-describe("reportUrlFactory", function () {
+    // mocks
+    var report, selectedValues, format;
 
-  // mocks
-  var report, selectedValues, format;
+    // injects
+    var reportUrlFactory;
 
-  // injects
-  var reportUrlFactory;
+    beforeEach(function() {
+        module('report');
 
-  beforeEach(function() {
-    module('report');
+        module(function($provide) {
+            $provide.factory('openlmisUrlFactory', function() {
+                return function(url) {
+                    return url;
+                };
+            });
+        });
 
-    module(function($provide){
-      $provide.factory('openlmisUrlFactory', function(){
-        return function(url){
-          return url;
-        }
-      });
+        report = {
+            id: 'reportId',
+            templateParameters: [
+                {
+                    name: 'program'
+                },
+                {
+                    name: 'facility'
+                }
+            ]
+        };
+        format = 'pdf';
+        selectedValues = {
+            program: 'programName',
+            facility: 'facilityCode'
+        };
+
+        inject(function(_reportUrlFactory_) {
+            reportUrlFactory = _reportUrlFactory_;
+        });
     });
 
-    report = {
-      id: "reportId",
-      templateParameters: [
-        { name: "program" },
-        { name: "facility" }
-      ]
-    };
-    format = "pdf";
-    selectedValues = { program: "programName", facility: "facilityCode" };
-
-    inject(function (_reportUrlFactory_) {
-        reportUrlFactory = _reportUrlFactory_;
+    it('should return string', function() {
+        var url = reportUrlFactory.buildUrl('/someURL', report, selectedValues, format);
+        expect(typeof(url)).toBe('string');
     });
-  });
 
-  it('should return string', function () {
-    var url = reportUrlFactory.buildUrl("/someURL", report, selectedValues, format);
-    expect(typeof(url)).toBe("string");
-  });
+    it('should format relative and absolute urls the same', function() {
+        var relativeURL = reportUrlFactory.buildUrl('someURL', report, selectedValues, format);
+        var absoluteURL = reportUrlFactory.buildUrl('/someURL', report, selectedValues, format);
 
-  it("should format relative and absolute urls the same", function(){
-    var relativeURL = reportUrlFactory.buildUrl("someURL", report, selectedValues, format);
-    var absoluteURL = reportUrlFactory.buildUrl("/someURL", report, selectedValues, format);
+        expect(relativeURL).toEqual(absoluteURL);
+    });
 
-    expect(relativeURL).toEqual(absoluteURL);
-  });
-
-  it("should format urls with selected values", function(){
-    var url = reportUrlFactory.buildUrl("/some", report, selectedValues, format);
-    expect(url).toBe('/api/reports/templates/some/reportId/pdf?program=programName&&facility=facilityCode&&');
-  });
+    it('should format urls with selected values', function() {
+        var url = reportUrlFactory.buildUrl('/some', report, selectedValues, format);
+        expect(url).toBe('/api/reports/templates/some/reportId/pdf?program=programName&&facility=facilityCode&&');
+    });
 
 });

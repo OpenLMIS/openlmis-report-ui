@@ -22,7 +22,7 @@ describe('reportService', function() {
         REQUISITIONS = 'requisitions',
         SELECT_EXPRESSION = '/api/periods';
 
-    beforeEach(function($provide) {
+    beforeEach(function() {
         module('report', function($provide) {
             urlFactoryMock = jasmine.createSpy();
             $provide.factory('openlmisUrlFactory', function() {
@@ -39,9 +39,19 @@ describe('reportService', function() {
             reportService = _reportService_;
         });
 
-        report = { id: REPORT_ID };
-        report2 = { id: REPORT_ID2 };
-        paramOptions = [{name: 'name1', value: 'value1'}, {name: 'name2', value: 'value2'}];
+        report = {
+            id: REPORT_ID
+        };
+        report2 = {
+            id: REPORT_ID2
+        };
+        paramOptions = [{
+            name: 'name1',
+            value: 'value1'
+        }, {
+            name: 'name2',
+            value: 'value2'
+        }];
     });
 
     describe('getReport()', function() {
@@ -76,7 +86,7 @@ describe('reportService', function() {
     describe('getReports()', function() {
 
         beforeEach(function() {
-           $httpBackend.when('GET', '/api/reports/templates/requisitions')
+            $httpBackend.when('GET', '/api/reports/templates/requisitions')
                 .respond(200, [report, report2]);
         });
 

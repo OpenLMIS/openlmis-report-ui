@@ -21,9 +21,6 @@ describe('ReportListController', function() {
     //mocks
     var reports;
 
-    //injects
-    var state, rootScope;
-
     beforeEach(function() {
         module('report');
 
@@ -40,11 +37,7 @@ describe('ReportListController', function() {
             }
         ];
 
-        inject(function($controller, $state, $rootScope) {
-
-            state = $state;
-            rootScope = $rootScope;
-
+        inject(function($controller) {
             vm = $controller('ReportListController', {
                 reports: reports
             });

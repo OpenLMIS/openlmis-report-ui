@@ -15,7 +15,7 @@
 
 describe('reportFactory', function() {
 
-    var $rootScope, $q, reportServiceMock, reportFactory,
+    var $rootScope, $q, reportServiceMock, reportFactory, paramStatus,
         report, report2, paramPeriod, paramFacility, periodOptions, facilityOptions,
         REPORT_ID = '629bc86c-0291-11e7-86e3-3417eb83144e',
         REPORT_ID2 = '6b207f14-0291-11e7-b732-3417eb83144e',
@@ -60,13 +60,25 @@ describe('reportFactory', function() {
             dependencies: []
         };
         periodOptions = [
-            { name: 'Q1' },
-            { name: 'Q2' },
-            { name: 'Q3' }
+            {
+                name: 'Q1'
+            },
+            {
+                name: 'Q2'
+            },
+            {
+                name: 'Q3'
+            }
         ];
         facilityOptions = [
-            { code: "F01", name: "Facility 1" },
-            { code: "F02", name: "Facility 2" }
+            {
+                code: 'F01',
+                name: 'Facility 1'
+            },
+            {
+                code: 'F02',
+                name: 'Facility 2'
+            }
         ];
         report = {
             id: REPORT_ID,
@@ -97,10 +109,14 @@ describe('reportFactory', function() {
 
         reportServiceMock.getReportParamsOptions.andCallFake(function(uri) {
             if (uri === FACILITIES_URL) {
-                return $q.when({ data: facilityOptions });
+                return $q.when({
+                    data: facilityOptions
+                });
             }
             if (uri === PERIODS_URL) {
-                return $q.when({ data: periodOptions });
+                return $q.when({
+                    data: periodOptions
+                });
             }
         });
     });
@@ -142,17 +158,32 @@ describe('reportFactory', function() {
 
     it('should retrieve report param options', function() {
         var expectedResult = {
-            'periods': [
-                { name: 'Q1', value: 'Q1'},
-                { name: 'Q2', value: 'Q2'},
-                { name: 'Q3', value: 'Q3'}
-            ],
-            'facilities': [
-                { name: 'Facility 1', value: 'F01'},
-                { name: 'Facility 2', value: 'F02'}
-            ]
-        },
-        paramOptions;
+                periods: [
+                    {
+                        name: 'Q1',
+                        value: 'Q1'
+                    },
+                    {
+                        name: 'Q2',
+                        value: 'Q2'
+                    },
+                    {
+                        name: 'Q3',
+                        value: 'Q3'
+                    }
+                ],
+                facilities: [
+                    {
+                        name: 'Facility 1',
+                        value: 'F01'
+                    },
+                    {
+                        name: 'Facility 2',
+                        value: 'F02'
+                    }
+                ]
+            },
+            paramOptions;
 
         reportFactory.getReportParamsOptions(report).then(function(data) {
             paramOptions = data;
@@ -164,12 +195,18 @@ describe('reportFactory', function() {
 
     it('should populate report param options with predefined list', function() {
         var expectedResult = {
-            'status': [
-                { name: 'alive', value: 'alive'},
-                { name: 'dead', value: 'dead'}
-            ]
-        },
-        paramOptions;
+                status: [
+                    {
+                        name: 'alive',
+                        value: 'alive'
+                    },
+                    {
+                        name: 'dead',
+                        value: 'dead'
+                    }
+                ]
+            },
+            paramOptions;
 
         reportFactory.getReportParamsOptions(report2).then(function(data) {
             paramOptions = data;
@@ -183,14 +220,23 @@ describe('reportFactory', function() {
         paramFacility.dependencies.push('periods');
 
         var expectedResult = {
-            'periods': [
-                { name: 'Q1', value: 'Q1'},
-                { name: 'Q2', value: 'Q2'},
-                { name: 'Q3', value: 'Q3'}
-            ],
-            'facilities': []
-        },
-        paramOptions;
+                periods: [
+                    {
+                        name: 'Q1',
+                        value: 'Q1'
+                    },
+                    {
+                        name: 'Q2',
+                        value: 'Q2'
+                    },
+                    {
+                        name: 'Q3',
+                        value: 'Q3'
+                    }
+                ],
+                facilities: []
+            },
+            paramOptions;
 
         reportFactory.getReportParamsOptions(report).then(function(data) {
             paramOptions = data;
