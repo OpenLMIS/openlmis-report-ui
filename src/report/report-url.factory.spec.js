@@ -21,6 +21,8 @@ describe('reportUrlFactory', function() {
     // injects
     var reportUrlFactory;
 
+    var unusedField;
+
     beforeEach(function() {
         module('report');
 

@@ -30,6 +30,8 @@
 
     reportUrlFactory.$inject = ['openlmisUrlFactory', 'pathFactory'];
 
+    var unusedField;
+
     function reportUrlFactory(openlmisUrlFactory, pathFactory) {
         var reportUrl = '/api/reports/templates',
             factory = {
