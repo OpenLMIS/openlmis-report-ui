@@ -56,6 +56,7 @@ describe('reportUrlFactory', function() {
 
     it('should return string', function() {
         var url = reportUrlFactory.buildUrl('/someURL', report, selectedValues, format);
+
         expect(typeof(url)).toBe('string');
     });
 
@@ -68,6 +69,7 @@ describe('reportUrlFactory', function() {
 
     it('should format urls with selected values', function() {
         var url = reportUrlFactory.buildUrl('/some', report, selectedValues, format);
+
         expect(url).toBe('/api/reports/templates/some/reportId/pdf?program=programName&&facility=facilityCode&&');
     });
 
