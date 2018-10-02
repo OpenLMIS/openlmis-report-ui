@@ -1,0 +1,8 @@
+.reporting-test {
+    display: flex;
+
+    iframe {
+        flex: 1 1 auto;
+        height: -webkit-fill-available;
+    }
+}
