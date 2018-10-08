@@ -19,21 +19,18 @@
 
     angular
         .module('reporting-test')
-        .config(config);
+        .controller('ReportingTestController', ReportingTestController);
 
-    config.$inject = ['$stateProvider'];
+    ReportingTestController.inject = ['SUPERSET_IFRAME_SOURCE', '$sce'];
 
-    function config($stateProvider) {
+    function ReportingTestController(SUPERSET_IFRAME_SOURCE, $sce) {
+        var vm = this;
 
-        $stateProvider.state('openlmis.reportingTest', {
-            controller: 'ReportingTestController',
-            controllerAs: 'vm',
-            label: 'reportingTest.reportingTest',
-            showInNavigation: true,
-            templateUrl: 'reporting-test/reporting-test.html',
-            url: '/reporting-test',
-            priority: -10
-        });
+        vm.$onInit = onInit;
+
+        function onInit() {
+            vm.supersetIframeSource = $sce.trustAsResourceUrl(SUPERSET_IFRAME_SOURCE);
+        }
 
     }
 
