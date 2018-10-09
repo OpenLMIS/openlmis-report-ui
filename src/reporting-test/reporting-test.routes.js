@@ -26,13 +26,21 @@
     function config($stateProvider) {
 
         $stateProvider.state('openlmis.reportingTest', {
-            controller: 'ReportingTestController',
-            controllerAs: 'vm',
             label: 'reportingTest.reportingTest',
             showInNavigation: true,
-            templateUrl: 'reporting-test/reporting-test.html',
             url: '/reporting-test',
-            priority: -10
+            priority: -10,
+            views: {
+                '@openlmis.reportingTest': {
+                    controller: 'ReportingTestController',
+                    templateUrl: 'reporting-test/reporting-test.html',
+                    controllerAs: 'vm'
+                },
+                // we need the main page to flex to the window size
+                '@': {
+                    templateUrl: 'openlmis-main-state/flex-page.html'
+                }
+            }
         });
 
     }
