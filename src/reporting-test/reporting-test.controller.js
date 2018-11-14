@@ -21,15 +21,16 @@
         .module('reporting-test')
         .controller('ReportingTestController', ReportingTestController);
 
-    ReportingTestController.inject = ['SUPERSET_IFRAME_SOURCE', '$sce'];
+    ReportingTestController.inject = ['reportCode', 'reportUrl'];
 
-    function ReportingTestController(SUPERSET_IFRAME_SOURCE, $sce) {
+    function ReportingTestController(reportCode, reportUrl) {
         var vm = this;
 
         vm.$onInit = onInit;
 
         function onInit() {
-            vm.supersetIframeSource = $sce.trustAsResourceUrl(SUPERSET_IFRAME_SOURCE);
+            vm.reportCode = reportCode;
+            vm.reportUrl = reportUrl;
         }
 
     }

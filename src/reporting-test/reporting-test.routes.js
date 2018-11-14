@@ -21,21 +21,17 @@
         .module('reporting-test')
         .config(config);
 
-    config.$inject = ['$stateProvider'];
+    config.$inject = ['$stateProvider', 'SUPERSET_REPORTS'];
 
-    function config($stateProvider) {
+    function config($stateProvider, SUPERSET_REPORTS) {
 
         $stateProvider.state('openlmis.reportingTest', {
             label: 'reportingTest.reportingTest',
             showInNavigation: true,
+            abstract: true,
             url: '/reporting-test',
             priority: -10,
             views: {
-                '@openlmis.reportingTest': {
-                    controller: 'ReportingTestController',
-                    templateUrl: 'reporting-test/reporting-test.html',
-                    controllerAs: 'vm'
-                },
                 // we need the main page to flex to the window size
                 '@': {
                     templateUrl: 'openlmis-main-state/flex-page.html'
@@ -43,6 +39,32 @@
             }
         });
 
+        addReporingPage($stateProvider, SUPERSET_REPORTS.REPORTING_RATE_AND_TIMELINESS);
+        addReporingPage($stateProvider, SUPERSET_REPORTS.STOCK_STATUS);
+        addReporingPage($stateProvider, SUPERSET_REPORTS.STOCKOUTS);
+        addReporingPage($stateProvider, SUPERSET_REPORTS.CONSUMPTION);
+        addReporingPage($stateProvider, SUPERSET_REPORTS.ORDERS);
+        addReporingPage($stateProvider, SUPERSET_REPORTS.ADJUSTMENTS);
+        addReporingPage($stateProvider, SUPERSET_REPORTS.ADMINISTRATIVE);
+    }
+
+    function addReporingPage($stateProvider, report) {
+        $stateProvider.state('openlmis.reportingTest.' + report.code, {
+            label: 'reportingTest.reportingTest.' + report.code,
+            showInNavigation: true,
+            url: '/' + report.code,
+            controller: 'ReportingTestController',
+            templateUrl: 'reporting-test/reporting-test.html',
+            controllerAs: 'vm',
+            resolve: {
+                reportUrl: function($sce) {
+                    return $sce.trustAsResourceUrl(report.url);
+                },
+                reportCode: function() {
+                    return report.code;
+                }
+            }
+        });
     }
 
 })();

@@ -15,36 +15,34 @@
 
 describe('ReportingTestController', function() {
 
-    var vm, SUPERSET_IFRAME_SOURCE, $sce, $controller, $sceResultMock;
-
     beforeEach(function() {
         module('reporting-test');
 
         inject(function($injector) {
-            $controller = $injector.get('$controller');
-            SUPERSET_IFRAME_SOURCE = $injector.get('SUPERSET_IFRAME_SOURCE');
-            $sce = $injector.get('$sce');
+            this.$controller = $injector.get('$controller');
         });
 
-        $sceResultMock = jasmine.createSpy('$sceResult');
+        this.reportCode = 'test';
+        this.reportUrl = 'http://localhost';
 
-        spyOn($sce, 'trustAsResourceUrl').andReturn($sceResultMock);
-
-        vm = $controller('ReportingTestController');
+        this.vm = this.$controller('ReportingTestController', {
+            reportCode: this.reportCode,
+            reportUrl: this.reportUrl
+        });
     });
 
     describe('$onInit', function() {
 
         beforeEach(function() {
-            vm.$onInit();
+            this.vm.$onInit();
         });
 
         it('should expose Superset iFrame src', function() {
-            expect(vm.supersetIframeSource).toEqual($sceResultMock);
+            expect(this.vm.reportUrl).toEqual(this.reportUrl);
         });
 
-        it('should register Superset iFrame src as trusted resource URL', function() {
-            expect($sce.trustAsResourceUrl).toHaveBeenCalledWith(SUPERSET_IFRAME_SOURCE);
+        it('should expose report code', function() {
+            expect(this.vm.reportCode).toEqual(this.reportCode);
         });
 
     });
