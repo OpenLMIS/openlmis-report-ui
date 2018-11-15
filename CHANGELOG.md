@@ -1,5 +1,8 @@
-5.0.7 / WIP
+5.1.0 / WIP
 ===========
+
+New functionality added in a backwards-compatible manner:
+* [OLMIS-5501](https://openlmis.atlassian.net/browse/OLMIS-5501): Added superset reports
 
 Improvements:
 * [OLMIS-5409](https://openlmis.atlassian.net/browse/OLMIS-5409): Updated ui-components to version 7.0.0.
