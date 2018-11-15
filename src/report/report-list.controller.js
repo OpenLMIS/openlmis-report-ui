@@ -28,9 +28,9 @@
         .module('report')
         .controller('ReportListController', controller);
 
-    controller.$inject = ['$state', 'reports'];
+    controller.$inject = ['$state', 'reports', 'SUPERSET_REPORTS'];
 
-    function controller($state, reports) {
+    function controller($state, reports, SUPERSET_REPORTS) {
         var vm = this;
 
         /**
@@ -43,5 +43,27 @@
          * The list of all available reports.
          */
         vm.reports = reports;
+
+        /**
+         * @ngdoc property
+         * @propertyOf report.controller:ReportListController
+         * @name selectedTab
+         * @type {number}
+         *
+         * @description
+         * Contains currently selected tab.
+         */
+        vm.selectedTab = 0;
+
+        /**
+         * @ngdoc property
+         * @propertyOf report.controller:ReportListController
+         * @name supersetReports
+         * @type {Object}
+         *
+         * @description
+         * Contains information about available superset reports.
+         */
+        vm.supersetReports = SUPERSET_REPORTS;
     }
 })();

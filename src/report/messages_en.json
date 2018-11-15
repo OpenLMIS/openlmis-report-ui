@@ -12,5 +12,14 @@
     "report.report": "Report",
     "report.reports": "Reports",
     "report.viewReports": "View Reports",
-    "report.xls": "XLS"
+    "report.xls": "XLS",
+    "report.systemReports": "System reports",
+    "report.superset": "Superset",
+    "report.superset.reportingRateAndTimeliness": "Reporting Rate and Timeliness",
+    "report.superset.stockStatus": "Stock Status",
+    "report.superset.stockouts": "Stockouts",
+    "report.superset.consumption": "Consumption",
+    "report.superset.orders": "Orders",
+    "report.superset.adjustments": "Adjustments",
+    "report.superset.administrative": "Administrative"
 }

@@ -13,20 +13,38 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-(function() {
+describe('SupersetReportController', function() {
 
-    'use strict';
+    beforeEach(function() {
+        module('report');
 
-    /**
-     * @module reporting-test
-     *
-     * @description
-     * Test module for integration with the Superset.
-     */
-    angular.module('reporting-test', [
-        'openlmis-i18n',
-        'openlmis-main-state',
-        'ui.router'
-    ]);
+        inject(function($injector) {
+            this.$controller = $injector.get('$controller');
+        });
 
-})();
+        this.reportCode = 'test';
+        this.reportUrl = 'http://localhost';
+
+        this.vm = this.$controller('SupersetReportController', {
+            reportCode: this.reportCode,
+            reportUrl: this.reportUrl
+        });
+    });
+
+    describe('$onInit', function() {
+
+        beforeEach(function() {
+            this.vm.$onInit();
+        });
+
+        it('should expose Superset iFrame src', function() {
+            expect(this.vm.reportUrl).toEqual(this.reportUrl);
+        });
+
+        it('should expose report code', function() {
+            expect(this.vm.reportCode).toEqual(this.reportCode);
+        });
+
+    });
+
+});

@@ -18,7 +18,7 @@
     'use strict';
 
     angular
-        .module('reporting-test')
+        .module('report')
         .constant('SUPERSET_REPORTS', getReports());
 
     function getReports() {

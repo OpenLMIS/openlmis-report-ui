@@ -18,19 +18,17 @@
     'use strict';
 
     angular
-        .module('reporting-test')
+        .module('report')
         .config(config);
 
     config.$inject = ['$stateProvider', 'SUPERSET_REPORTS'];
 
     function config($stateProvider, SUPERSET_REPORTS) {
 
-        $stateProvider.state('openlmis.reportingTest', {
-            label: 'reportingTest.reportingTest',
-            showInNavigation: true,
+        $stateProvider.state('openlmis.reports.list.superset', {
             abstract: true,
-            url: '/reporting-test',
-            priority: -10,
+            label: 'report.superset',
+            url: '/superset',
             views: {
                 // we need the main page to flex to the window size
                 '@': {
@@ -49,12 +47,10 @@
     }
 
     function addReporingPage($stateProvider, report) {
-        $stateProvider.state('openlmis.reportingTest.' + report.code, {
-            label: 'reportingTest.reportingTest.' + report.code,
-            showInNavigation: true,
+        $stateProvider.state('openlmis.reports.list.superset.' + report.code, {
             url: '/' + report.code,
-            controller: 'ReportingTestController',
-            templateUrl: 'reporting-test/reporting-test.html',
+            controller: 'SupersetReportController',
+            templateUrl: 'report/superset-report.html',
             controllerAs: 'vm',
             resolve: {
                 reportUrl: function($sce) {

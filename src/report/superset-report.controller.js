@@ -18,12 +18,12 @@
     'use strict';
 
     angular
-        .module('reporting-test')
-        .controller('ReportingTestController', ReportingTestController);
+        .module('report')
+        .controller('SupersetReportController', SupersetReportController);
 
-    ReportingTestController.inject = ['reportCode', 'reportUrl'];
+    SupersetReportController.inject = ['reportCode', 'reportUrl'];
 
-    function ReportingTestController(reportCode, reportUrl) {
+    function SupersetReportController(reportCode, reportUrl) {
         var vm = this;
 
         vm.$onInit = onInit;
