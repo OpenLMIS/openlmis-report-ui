@@ -38,7 +38,7 @@
          * @ngdoc property
          * @propertyOf report.controller:SupersetReportController
          * @name reportCode
-         * @type {String}
+         * @type {string}
          *
          * @description
          * The superset report code.
@@ -49,7 +49,7 @@
          * @ngdoc property
          * @propertyOf report.controller:SupersetReportController
          * @name reportUrl
-         * @type {String}
+         * @type {string}
          *
          * @description
          * The superset report URL.
@@ -60,7 +60,7 @@
          * @ngdoc property
          * @propertyOf report.controller:SupersetReportController
          * @name authUrl
-         * @type {String}
+         * @type {string}
          *
          * @description
          * The superset authorization URL.
