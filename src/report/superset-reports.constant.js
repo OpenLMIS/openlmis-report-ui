@@ -17,6 +17,13 @@
 
     'use strict';
 
+    /**
+     * @ngdoc object
+     * @name report.SUPERSET_REPORTS
+     *
+     * @description
+     * This is constant defining available superset reports.
+     */
     angular
         .module('report')
         .constant('SUPERSET_REPORTS', getReports());

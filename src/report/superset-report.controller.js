@@ -17,6 +17,13 @@
 
     'use strict';
 
+    /**
+     * @ngdoc controller
+     * @name report.controller:SupersetReportController
+     *
+     * @description
+     * Controller for superset report view.
+     */
     angular
         .module('report')
         .controller('SupersetReportController', SupersetReportController);
@@ -25,8 +32,29 @@
 
     function SupersetReportController(reportCode, reportUrl) {
         var vm = this;
-
         vm.$onInit = onInit;
+
+        /**
+         * @ngdoc property
+         * @propertyOf report.controller:SupersetReportController
+         * @name reportCode
+         * @type {String}
+         *
+         * @description
+         * The superset report code.
+         */
+        vm.reportCode = undefined;
+
+        /**
+         * @ngdoc property
+         * @propertyOf report.controller:SupersetReportController
+         * @name reportUrl
+         * @type {String}
+         *
+         * @description
+         * The superset report URL.
+         */
+        vm.reportUrl = undefined;
 
         function onInit() {
             vm.reportCode = reportCode;
