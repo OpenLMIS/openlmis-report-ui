@@ -56,9 +56,21 @@
          */
         vm.reportUrl = undefined;
 
+        /**
+         * @ngdoc property
+         * @propertyOf report.controller:SupersetReportController
+         * @name authUrl
+         * @type {String}
+         *
+         * @description
+         * The superset authorization URL.
+         */
+        vm.authUrl = undefined;
+
         function onInit() {
             vm.reportCode = reportCode;
             vm.reportUrl = reportUrl;
+            vm.authUrl = 'https://superset.uat.openlmis.org/login/openlmis';
         }
 
     }

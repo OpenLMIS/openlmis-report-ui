@@ -1,3 +1,6 @@
 <h2>{{ 'report.superset.' + vm.reportCode | message }}</h2>
-<p>This page requires authorization in the reporting stack. If nothing shows up, <a href="https://superset.uat.openlmis.org/login/openlmis">click here</a> to authorize your account</p>
+<p>
+    {{ 'report.superset.auth.pageRequiresAuthorization' | message }}
+    <a href="{{vm.authUrl}}">{{ 'report.superset.auth.clickingHere' | message }}</a>
+</p>
 <iframe seamless frameBorder="0" scrolling="no" ng-src="{{vm.reportUrl}}"></iframe>
