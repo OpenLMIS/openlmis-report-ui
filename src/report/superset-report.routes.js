@@ -27,7 +27,6 @@
 
         $stateProvider.state('openlmis.reports.list.superset', {
             abstract: true,
-            label: 'report.superset',
             url: '/superset',
             views: {
                 // we need the main page to flex to the window size
@@ -49,6 +48,7 @@
     function addReporingPage($stateProvider, report) {
         $stateProvider.state('openlmis.reports.list.superset.' + report.code, {
             url: '/' + report.code,
+            label: 'report.superset.' + report.code,
             controller: 'SupersetReportController',
             templateUrl: 'report/superset-report.html',
             controllerAs: 'vm',
