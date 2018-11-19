@@ -47,17 +47,6 @@
         /**
          * @ngdoc property
          * @propertyOf report.controller:ReportListController
-         * @name selectedTab
-         * @type {number}
-         *
-         * @description
-         * Contains currently selected tab.
-         */
-        vm.selectedTab = 0;
-
-        /**
-         * @ngdoc property
-         * @propertyOf report.controller:ReportListController
          * @name supersetReports
          * @type {Object}
          *
