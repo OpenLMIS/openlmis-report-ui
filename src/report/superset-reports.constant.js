@@ -31,13 +31,19 @@
     function getReports() {
         return {
             REPORTING_RATE_AND_TIMELINESS: createReport('reportingRateAndTimeliness',
-                'https://superset.uat.openlmis.org/login/openlmis'),
-            STOCK_STATUS: createReport('stockStatus', 'https://superset.uat.openlmis.org/login/openlmis'),
-            STOCKOUTS: createReport('stockouts', 'https://superset.uat.openlmis.org/login/openlmis'),
-            CONSUMPTION: createReport('consumption', 'https://superset.uat.openlmis.org/login/openlmis'),
-            ORDERS: createReport('orders', 'https://superset.uat.openlmis.org/login/openlmis'),
-            ADJUSTMENTS: createReport('adjustments', 'https://superset.uat.openlmis.org/login/openlmis'),
-            ADMINISTRATIVE: createReport('administrative',  'https://superset.uat.openlmis.org/login/openlmis')
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/1/'),
+            STOCK_STATUS: createReport('stockStatus',
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/2/'),
+            STOCKOUTS: createReport('stockouts',
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/3/'),
+            CONSUMPTION: createReport('consumption',
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/4/'),
+            ORDERS: createReport('orders',
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/5/'),
+            ADJUSTMENTS: createReport('adjustments',
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/6/'),
+            ADMINISTRATIVE: createReport('administrative',
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/7/')
         };
     }
 
