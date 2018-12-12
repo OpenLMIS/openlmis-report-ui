@@ -1,5 +1,5 @@
-5.1.0 / WIP
-===========
+5.1.0 / 2018-12-12
+==================
 
 New functionality added in a backwards-compatible manner:
 * [OLMIS-5501](https://openlmis.atlassian.net/browse/OLMIS-5501): Added superset reports
