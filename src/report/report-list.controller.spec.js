@@ -15,16 +15,11 @@
 
 describe('ReportListController', function() {
 
-    //tested
-    var vm;
-
-    //mocks
-    var reports;
-
     beforeEach(function() {
         module('report');
+        module('openlmis-auth');
 
-        reports = [
+        this.reports = [
             {
                 id: 'id-one',
                 name: 'Report 1',
@@ -37,14 +32,40 @@ describe('ReportListController', function() {
             }
         ];
 
-        inject(function($controller) {
-            vm = $controller('ReportListController', {
-                reports: reports
-            });
+        inject(function($injector) {
+            this.$controller = $injector.get('$controller');
+            this.authorizationService = $injector.get('authorizationService');
         });
+
+        this.vm = this.$controller('ReportListController', {
+            reports: this.reports
+        });
+
+        spyOn(this.authorizationService, 'hasRight');
     });
 
     it('should set report list', function() {
-        expect(vm.reports).toEqual(reports);
+        expect(this.vm.reports).toEqual(this.reports);
     });
+
+    describe('hasRight', function() {
+
+        it('should return true if authorizationService return true', function() {
+            this.authorizationService.hasRight.andReturn(true);
+            var result = this.vm.hasRight('rightName');
+
+            expect(result).toBeTruthy();
+            expect(this.authorizationService.hasRight).toHaveBeenCalledWith('rightName');
+        });
+
+        it('should return false if authorizationService return false', function() {
+            this.authorizationService.hasRight.andReturn(false);
+            var result = this.vm.hasRight('rightName');
+
+            expect(result).toBeFalsy();
+            expect(this.authorizationService.hasRight).toHaveBeenCalledWith('rightName');
+        });
+
+    });
+
 });

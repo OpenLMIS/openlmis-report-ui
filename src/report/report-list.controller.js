@@ -28,10 +28,12 @@
         .module('report')
         .controller('ReportListController', controller);
 
-    controller.$inject = ['$state', 'reports', 'SUPERSET_REPORTS'];
+    controller.$inject = ['$state', 'reports', 'SUPERSET_REPORTS', 'authorizationService'];
 
-    function controller($state, reports, SUPERSET_REPORTS) {
+    function controller($state, reports, SUPERSET_REPORTS, authorizationService) {
         var vm = this;
+
+        vm.hasRight = hasRight;
 
         /**
          * @ngdoc property
@@ -54,5 +56,20 @@
          * Contains information about available superset reports.
          */
         vm.supersetReports = SUPERSET_REPORTS;
+
+        /**
+         * @ngdoc method
+         * @methodOf report.controller:ReportListController
+         * @name hasRight
+         *
+         * @description
+         * Returns true if user has right to manage the proper report.
+         *
+         * @param {String}   rightName  the right name
+         * @return {Boolean}            true if the user has the right, otherwise false
+         */
+        function hasRight(rightName) {
+            return authorizationService.hasRight(rightName);
+        }
     }
 })();

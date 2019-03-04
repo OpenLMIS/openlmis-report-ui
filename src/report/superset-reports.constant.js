@@ -31,26 +31,34 @@
     function getReports() {
         return {
             REPORTING_RATE_AND_TIMELINESS: createReport('reportingRateAndTimeliness',
-                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/1/'),
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/1/',
+                'REPORTING_RATE_AND_TIMELINESS_REPORT_MANAGE'),
             STOCK_STATUS: createReport('stockStatus',
-                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/2/'),
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/2/',
+                'STOCK_STATUS_REPORT_MANAGE'),
             STOCKOUTS: createReport('stockouts',
-                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/3/'),
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/3/',
+                'STOCKOUTS_REPORT_MANAGE'),
             CONSUMPTION: createReport('consumption',
-                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/4/'),
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/4/',
+                'CONSUMPTION_REPORT_MANAGE'),
             ORDERS: createReport('orders',
-                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/5/'),
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/5/',
+                'ORDERS_REPORT_MANAGE'),
             ADJUSTMENTS: createReport('adjustments',
-                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/6/'),
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/6/',
+                'ADJUSTMENTS_REPORT_MANAGE'),
             ADMINISTRATIVE: createReport('administrative',
-                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/7/')
+                'https://superset.uat.openlmis.org/login/openlmis?redirect_url=/superset/dashboard/7/',
+                'ADMINISTRATIVE_REPORT_MANAGE')
         };
     }
 
-    function createReport(code, url) {
+    function createReport(code, url, right) {
         return {
             code: code,
-            url: url
+            url: url,
+            right: right
         };
     }
 

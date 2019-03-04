@@ -3,6 +3,7 @@
 
 New functionality added in a backwards-compatible manner:
 * [OLMIS-5501](https://openlmis.atlassian.net/browse/OLMIS-5501): Added superset reports
+* [OLMIS-6055](https://openlmis.atlassian.net/browse/OLMIS-6055): Restricted displaying superset report on the list by checking rights per report.
 
 Improvements:
 * [OLMIS-5409](https://openlmis.atlassian.net/browse/OLMIS-5409): Updated ui-components to version 7.0.0.
