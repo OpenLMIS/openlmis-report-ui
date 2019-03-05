@@ -28,9 +28,11 @@
         .module('report')
         .factory('reportFactory', factory);
 
-    factory.$inject = ['$http', '$q', 'openlmisUrlFactory', 'reportService', 'REPORTING_SERVICES'];
+    factory.$inject = ['$http', '$q', 'openlmisUrlFactory', 'reportService', 'REPORTING_SERVICES',
+        'authorizationService', 'REPORT_RIGHTS'];
 
-    function factory($http, $q, openlmisUrlFactory, reportService, REPORTING_SERVICES) {
+    function factory($http, $q, openlmisUrlFactory, reportService, REPORTING_SERVICES,
+                     authorizationService, REPORT_RIGHTS) {
         var factory = {
             getReport: getReport,
             getReports: getReports,
@@ -101,18 +103,22 @@
          * @return {Promise} The promise for all the reports.
          */
         function getAllReports() {
+            if (!authorizationService.hasRight(REPORT_RIGHTS.REPORTS_VIEW)) {
+                return $q.resolve([]);
+            }
+
             var promises = [],
                 deferred = $q.defer(),
                 services = REPORTING_SERVICES;
 
-            angular.forEach(services, function(service) {
+            services.forEach(function(service) {
                 promises.push(getReports(service));
             });
 
             $q.all(promises).then(function(reportLists) {
                 var allReports = [];
 
-                angular.forEach(reportLists, function(reportList) {
+                reportLists.forEach(function(reportList) {
                     allReports = allReports.concat(reportList);
                 });
 

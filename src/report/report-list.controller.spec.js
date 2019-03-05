@@ -15,11 +15,9 @@
 
 describe('ReportListController', function() {
 
-    var UserDataBuilder;
-
     beforeEach(function() {
         module('report');
-        module('openlmis-permissions');
+        module('openlmis-auth');
 
         this.reports = [
             {
@@ -36,19 +34,15 @@ describe('ReportListController', function() {
 
         inject(function($injector) {
             this.$controller = $injector.get('$controller');
-            this.permissionService = $injector.get('permissionService');
             this.authorizationService = $injector.get('authorizationService');
-            UserDataBuilder = $injector.get('UserDataBuilder');
+            this.REPORT_RIGHTS = $injector.get('REPORT_RIGHTS');
         });
 
         this.vm = this.$controller('ReportListController', {
             reports: this.reports
         });
 
-        this.user = new UserDataBuilder().build();
-
-        spyOn(this.permissionService, 'hasPermission');
-        spyOn(this.authorizationService, 'getUser');
+        spyOn(this.authorizationService, 'hasRight');
     });
 
     it('should set report list', function() {
@@ -58,25 +52,40 @@ describe('ReportListController', function() {
     describe('hasRight', function() {
 
         it('should return true if permissionService returns true', function() {
-            this.authorizationService.getUser.andReturn(this.user);
-            this.permissionService.hasPermission.andReturn(true);
+            this.authorizationService.hasRight.andCallFake(function(rightName) {
+                return rightName === 'rightName';
+            });
+
             var result = this.vm.hasRight('rightName');
 
             expect(result).toBeTruthy();
-            expect(this.permissionService.hasPermission).toHaveBeenCalledWith(this.user.user_id, {
-                right: 'rightName'
-            });
+            expect(this.authorizationService.hasRight).toHaveBeenCalledWith('rightName');
+            expect(this.authorizationService.hasRight).toHaveBeenCalledWith(
+                this.REPORT_RIGHTS.REPORTS_VIEW
+            );
         });
 
         it('should return false if permissionService returns false', function() {
-            this.authorizationService.getUser.andReturn(this.user);
-            this.permissionService.hasPermission.andReturn(false);
+            this.authorizationService.hasRight.andReturn(false);
             var result = this.vm.hasRight('rightName');
 
             expect(result).toBeFalsy();
-            expect(this.permissionService.hasPermission).toHaveBeenCalledWith(this.user.user_id, {
-                right: 'rightName'
+            expect(this.authorizationService.hasRight).toHaveBeenCalledWith('rightName');
+            expect(this.authorizationService.hasRight).toHaveBeenCalledWith(
+                this.REPORT_RIGHTS.REPORTS_VIEW
+            );
+        });
+
+        it('should return true if user has REPORTS_VIEW right', function() {
+            this.authorizationService.hasRight.andCallFake(function(rightName) {
+                return rightName === 'REPORTS_VIEW';
             });
+            var result = this.vm.hasRight('rightName');
+
+            expect(result).toBeTruthy();
+            expect(this.authorizationService.hasRight).toHaveBeenCalledWith(
+                this.REPORT_RIGHTS.REPORTS_VIEW
+            );
         });
 
     });

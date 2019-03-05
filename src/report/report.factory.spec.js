@@ -15,7 +15,7 @@
 
 describe('reportFactory', function() {
 
-    var $rootScope, $q, reportServiceMock, reportFactory, paramStatus,
+    var $rootScope, $q, reportServiceMock, reportFactory, paramStatus, authorizationService,
         report, report2, paramPeriod, paramFacility, periodOptions, facilityOptions,
         REPORT_ID = '629bc86c-0291-11e7-86e3-3417eb83144e',
         REPORT_ID2 = '6b207f14-0291-11e7-b732-3417eb83144e',
@@ -24,6 +24,7 @@ describe('reportFactory', function() {
         FACILITIES_URL = '/api/facilities';
 
     beforeEach(function() {
+        module('openlmis-auth');
         module('report', function($provide) {
             reportServiceMock = jasmine.createSpyObj('reportService',
                 ['getReport', 'getReports', 'getReportParamsOptions']);
@@ -35,10 +36,11 @@ describe('reportFactory', function() {
             $provide.constant('REPORTING_SERVICES', ['requisitions']);
         });
 
-        inject(function(_$rootScope_, _$q_, _reportFactory_) {
-            $rootScope = _$rootScope_;
-            $q = _$q_;
-            reportFactory = _reportFactory_;
+        inject(function($injector) {
+            $rootScope = $injector.get('$rootScope');
+            $q = $injector.get('$q');
+            reportFactory = $injector.get('reportFactory');
+            authorizationService = $injector.get('authorizationService');
         });
 
         paramPeriod = {
@@ -145,6 +147,8 @@ describe('reportFactory', function() {
     });
 
     it('should get all reports', function() {
+        spyOn(authorizationService, 'hasRight').andReturn(true);
+
         var reports;
 
         reportFactory.getAllReports().then(function(data) {
@@ -154,6 +158,20 @@ describe('reportFactory', function() {
 
         expect(reports).toEqual([report, report2]);
         expect(reportServiceMock.getReports).toHaveBeenCalledWith(REQUISITIONS);
+    });
+
+    it('should not call reportService if user does not have REPORTS_VIEW right', function() {
+        spyOn(authorizationService, 'hasRight').andReturn(false);
+
+        var reports;
+
+        reportFactory.getAllReports().then(function(data) {
+            reports = data;
+        });
+        $rootScope.$apply();
+
+        expect(reports).toEqual([]);
+        expect(reportServiceMock.getReports).not.toHaveBeenCalled();
     });
 
     it('should retrieve report param options', function() {

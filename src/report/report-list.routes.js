@@ -33,7 +33,14 @@
             templateUrl: 'report/report-list.html',
             url: '/list',
             accessRights: [
-                REPORT_RIGHTS.REPORTS_VIEW
+                REPORT_RIGHTS.REPORTS_VIEW,
+                REPORT_RIGHTS.REPORTING_RATE_AND_TIMELINESS_REPORT_VIEW,
+                REPORT_RIGHTS.STOCK_STATUS_REPORT_VIEW,
+                REPORT_RIGHTS.STOCKOUTS_REPORT_VIEW,
+                REPORT_RIGHTS.CONSUMPTION_REPORT_VIEW,
+                REPORT_RIGHTS.ORDERS_REPORT_VIEW,
+                REPORT_RIGHTS.ADJUSTMENTS_REPORT_VIEW,
+                REPORT_RIGHTS.ADMINISTRATIVE_REPORT_VIEW
             ],
             resolve: {
                 reports: function(reportFactory) {
