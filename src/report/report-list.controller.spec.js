@@ -15,9 +15,11 @@
 
 describe('ReportListController', function() {
 
+    var UserDataBuilder;
+
     beforeEach(function() {
         module('report');
-        module('openlmis-auth');
+        module('openlmis-permissions');
 
         this.reports = [
             {
@@ -34,14 +36,19 @@ describe('ReportListController', function() {
 
         inject(function($injector) {
             this.$controller = $injector.get('$controller');
+            this.permissionService = $injector.get('permissionService');
             this.authorizationService = $injector.get('authorizationService');
+            UserDataBuilder = $injector.get('UserDataBuilder');
         });
 
         this.vm = this.$controller('ReportListController', {
             reports: this.reports
         });
 
-        spyOn(this.authorizationService, 'hasRight');
+        this.user = new UserDataBuilder().build();
+
+        spyOn(this.permissionService, 'hasPermission');
+        spyOn(this.authorizationService, 'getUser');
     });
 
     it('should set report list', function() {
@@ -50,20 +57,26 @@ describe('ReportListController', function() {
 
     describe('hasRight', function() {
 
-        it('should return true if authorizationService return true', function() {
-            this.authorizationService.hasRight.andReturn(true);
+        it('should return true if permissionService returns true', function() {
+            this.authorizationService.getUser.andReturn(this.user);
+            this.permissionService.hasPermission.andReturn(true);
             var result = this.vm.hasRight('rightName');
 
             expect(result).toBeTruthy();
-            expect(this.authorizationService.hasRight).toHaveBeenCalledWith('rightName');
+            expect(this.permissionService.hasPermission).toHaveBeenCalledWith(this.user.user_id, {
+                right: 'rightName'
+            });
         });
 
-        it('should return false if authorizationService return false', function() {
-            this.authorizationService.hasRight.andReturn(false);
+        it('should return false if permissionService returns false', function() {
+            this.authorizationService.getUser.andReturn(this.user);
+            this.permissionService.hasPermission.andReturn(false);
             var result = this.vm.hasRight('rightName');
 
             expect(result).toBeFalsy();
-            expect(this.authorizationService.hasRight).toHaveBeenCalledWith('rightName');
+            expect(this.permissionService.hasPermission).toHaveBeenCalledWith(this.user.user_id, {
+                right: 'rightName'
+            });
         });
 
     });

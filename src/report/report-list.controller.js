@@ -28,9 +28,11 @@
         .module('report')
         .controller('ReportListController', controller);
 
-    controller.$inject = ['$state', 'reports', 'SUPERSET_REPORTS', 'authorizationService'];
+    controller.$inject = ['$state', 'reports', 'SUPERSET_REPORTS', 'authorizationService',
+        'permissionService'];
 
-    function controller($state, reports, SUPERSET_REPORTS, authorizationService) {
+    function controller($state, reports, SUPERSET_REPORTS, authorizationService,
+                        permissionService) {
         var vm = this;
 
         vm.hasRight = hasRight;
@@ -69,7 +71,10 @@
          * @return {Boolean}            true if the user has the right, otherwise false
          */
         function hasRight(rightName) {
-            return authorizationService.hasRight(rightName);
+            var userId = authorizationService.getUser().user_id;
+            return permissionService.hasPermission(userId, {
+                right: rightName
+            });
         }
     }
 })();
