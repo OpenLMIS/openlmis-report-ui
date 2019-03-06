@@ -122,7 +122,6 @@ describe('reportFactory', function() {
                     data: context.periodOptions
                 });
             }
-            console.log(uri);
         });
     });
 

@@ -58,7 +58,6 @@
          */
         vm.supersetReports = SUPERSET_REPORTS;
 
-
         /**
          * @ngdoc property
          * @propertyOf report.controller:ReportListController
