@@ -17,7 +17,6 @@ describe('ReportListController', function() {
 
     beforeEach(function() {
         module('report');
-        module('openlmis-auth');
 
         this.reports = [
             {
@@ -32,17 +31,26 @@ describe('ReportListController', function() {
             }
         ];
 
+        this.permissions = {
+            REPORTS_VIEW: false,
+            REPORTING_RATE_AND_TIMELINESS_REPORT_VIEW: true,
+            STOCK_STATUS_REPORT_VIEW: false,
+            STOCKOUTS_REPORT_VIEW: false,
+            CONSUMPTION_REPORT_VIEW: false,
+            ORDERS_REPORT_VIEW: false,
+            ADJUSTMENTS_REPORT_VIEW: false,
+            ADMINISTRATIVE_REPORT_VIEW: false
+        };
+
         inject(function($injector) {
             this.$controller = $injector.get('$controller');
-            this.authorizationService = $injector.get('authorizationService');
             this.REPORT_RIGHTS = $injector.get('REPORT_RIGHTS');
         });
 
         this.vm = this.$controller('ReportListController', {
-            reports: this.reports
+            reports: this.reports,
+            permissions: this.permissions
         });
-
-        spyOn(this.authorizationService, 'hasRight');
     });
 
     it('should set report list', function() {
@@ -52,40 +60,22 @@ describe('ReportListController', function() {
     describe('hasRight', function() {
 
         it('should return true if permissionService returns true', function() {
-            this.authorizationService.hasRight.andCallFake(function(rightName) {
-                return rightName === 'rightName';
-            });
-
-            var result = this.vm.hasRight('rightName');
+            var result = this.vm.hasRight('REPORTING_RATE_AND_TIMELINESS_REPORT_VIEW');
 
             expect(result).toBeTruthy();
-            expect(this.authorizationService.hasRight).toHaveBeenCalledWith('rightName');
-            expect(this.authorizationService.hasRight).toHaveBeenCalledWith(
-                this.REPORT_RIGHTS.REPORTS_VIEW
-            );
         });
 
         it('should return false if permissionService returns false', function() {
-            this.authorizationService.hasRight.andReturn(false);
-            var result = this.vm.hasRight('rightName');
+            var result = this.vm.hasRight('ADMINISTRATIVE_REPORT_VIEW');
 
             expect(result).toBeFalsy();
-            expect(this.authorizationService.hasRight).toHaveBeenCalledWith('rightName');
-            expect(this.authorizationService.hasRight).toHaveBeenCalledWith(
-                this.REPORT_RIGHTS.REPORTS_VIEW
-            );
         });
 
         it('should return true if user has REPORTS_VIEW right', function() {
-            this.authorizationService.hasRight.andCallFake(function(rightName) {
-                return rightName === 'REPORTS_VIEW';
-            });
-            var result = this.vm.hasRight('rightName');
+            this.vm.permissions['REPORTS_VIEW'] = true;
+            var result = this.vm.hasRight('ADMINISTRATIVE_REPORT_VIEW');
 
             expect(result).toBeTruthy();
-            expect(this.authorizationService.hasRight).toHaveBeenCalledWith(
-                this.REPORT_RIGHTS.REPORTS_VIEW
-            );
         });
 
     });

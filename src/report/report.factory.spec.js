@@ -15,16 +15,9 @@
 
 describe('reportFactory', function() {
 
-    var $rootScope, $q, reportServiceMock, reportFactory, paramStatus, authorizationService,
-        report, report2, paramPeriod, paramFacility, periodOptions, facilityOptions,
-        REPORT_ID = '629bc86c-0291-11e7-86e3-3417eb83144e',
-        REPORT_ID2 = '6b207f14-0291-11e7-b732-3417eb83144e',
-        REQUISITIONS = 'requisitions',
-        PERIODS_URL = '/api/periods',
-        FACILITIES_URL = '/api/facilities';
+    var reportServiceMock;
 
     beforeEach(function() {
-        module('openlmis-auth');
         module('report', function($provide) {
             reportServiceMock = jasmine.createSpyObj('reportService',
                 ['getReport', 'getReports', 'getReportParamsOptions']);
@@ -37,31 +30,32 @@ describe('reportFactory', function() {
         });
 
         inject(function($injector) {
-            $rootScope = $injector.get('$rootScope');
-            $q = $injector.get('$q');
-            reportFactory = $injector.get('reportFactory');
-            authorizationService = $injector.get('authorizationService');
+            this.$rootScope = $injector.get('$rootScope');
+            this.reportFactory = $injector.get('reportFactory');
+            this.REPORT_RIGHTS = $injector.get('REPORT_RIGHTS');
+            this.$q = $injector.get('$q');
+            this.authorizationService = $injector.get('authorizationService');
         });
 
-        paramPeriod = {
+        this.paramPeriod = {
             name: 'periods',
             selectExpression: '/api/periods',
             selectProperty: 'name',
             dependencies: []
         };
-        paramFacility = {
+        this.paramFacility = {
             name: 'facilities',
             selectExpression: '/api/facilities',
             selectProperty: 'code',
             displayProperty: 'name',
             dependencies: []
         };
-        paramStatus = {
+        this.paramStatus = {
             name: 'status',
             options: ['alive', 'dead'],
             dependencies: []
         };
-        periodOptions = [
+        this.periodOptions = [
             {
                 name: 'Q1'
             },
@@ -72,7 +66,7 @@ describe('reportFactory', function() {
                 name: 'Q3'
             }
         ];
-        facilityOptions = [
+        this.facilityOptions = [
             {
                 code: 'F01',
                 name: 'Facility 1'
@@ -82,93 +76,102 @@ describe('reportFactory', function() {
                 name: 'Facility 2'
             }
         ];
-        report = {
-            id: REPORT_ID,
-            templateParameters: [paramPeriod, paramFacility]
-        };
-        report2 = {
-            id: REPORT_ID2,
-            templateParameters: [paramStatus]
 
+        this.REPORT_ID = '629bc86c-0291-11e7-86e3-3417eb83144e';
+        this.REPORT_ID2 = '6b207f14-0291-11e7-b732-3417eb83144e';
+        this.REQUISITIONS = 'requisitions';
+        this.PERIODS_URL = '/api/periods';
+        this.FACILITIES_URL = '/api/facilities';
+
+        this.report = {
+            id: this.REPORT_ID,
+            templateParameters: [this.paramPeriod, this.paramFacility]
         };
+        this.report2 = {
+            id: this.REPORT_ID2,
+            templateParameters: [this.paramStatus]
+        };
+
+        var context = this;
 
         reportServiceMock.getReport.andCallFake(function(module, id) {
-            if (module === REQUISITIONS) {
-                if (id === REPORT_ID) {
-                    return $q.when(report);
+            if (module === context.REQUISITIONS) {
+                if (id === context.REPORT_ID) {
+                    return context.$q.when(context.report);
                 }
-                if (id === REPORT_ID2) {
-                    return $q.when(report2);
+                if (id === context.REPORT_ID2) {
+                    return context.$q.when(context.report2);
                 }
             }
         });
 
         reportServiceMock.getReports.andCallFake(function(module) {
-            if (module === REQUISITIONS) {
-                return $q.when([report, report2]);
+            if (module === context.REQUISITIONS) {
+                return context.$q.when([context.report, context.report2]);
             }
         });
 
         reportServiceMock.getReportParamsOptions.andCallFake(function(uri) {
-            if (uri === FACILITIES_URL) {
-                return $q.when({
-                    data: facilityOptions
+            if (uri === context.FACILITIES_URL) {
+                return context.$q.when({
+                    data: context.facilityOptions
                 });
             }
-            if (uri === PERIODS_URL) {
-                return $q.when({
-                    data: periodOptions
+            if (uri === context.PERIODS_URL) {
+                return context.$q.when({
+                    data: context.periodOptions
                 });
             }
+            console.log(uri);
         });
     });
 
     it('should get a single report', function() {
         var report;
 
-        reportFactory.getReport(REQUISITIONS, REPORT_ID).then(function(data) {
+        this.reportFactory.getReport(this.REQUISITIONS, this.REPORT_ID).then(function(data) {
             report = data;
         });
-        $rootScope.$apply();
+        this.$rootScope.$apply();
 
         expect(report).not.toBe(undefined);
-        expect(report.id).toEqual(REPORT_ID);
+        expect(report.id).toEqual(this.REPORT_ID);
     });
 
     it('should get reports for a module', function() {
         var reports;
 
-        reportFactory.getReports(REQUISITIONS).then(function(data) {
+        this.reportFactory.getReports(this.REQUISITIONS).then(function(data) {
             reports = data;
         });
-        $rootScope.$apply();
+        this.$rootScope.$apply();
 
-        expect(reports).toEqual([report, report2]);
+        expect(reports).toEqual([this.report, this.report2]);
     });
 
     it('should get all reports', function() {
-        spyOn(authorizationService, 'hasRight').andReturn(true);
+        spyOn(this.authorizationService, 'hasRight').andReturn(true);
 
         var reports;
 
-        reportFactory.getAllReports().then(function(data) {
+        this.reportFactory.getAllReports().then(function(data) {
             reports = data;
         });
-        $rootScope.$apply();
+        this.$rootScope.$apply();
 
-        expect(reports).toEqual([report, report2]);
-        expect(reportServiceMock.getReports).toHaveBeenCalledWith(REQUISITIONS);
+        expect(reports).toEqual([this.report, this.report2]);
+        expect(reportServiceMock.getReports).toHaveBeenCalledWith(this.REQUISITIONS);
     });
 
-    it('should not call reportService if user does not have REPORTS_VIEW right', function() {
-        spyOn(authorizationService, 'hasRight').andReturn(false);
+    it('should not get reports when user does not have REPORTS_VIEW right', function() {
+        spyOn(this.authorizationService, 'hasRight').andReturn(false);
 
         var reports;
 
-        reportFactory.getAllReports().then(function(data) {
+        this.reportFactory.getAllReports().then(function(data) {
             reports = data;
         });
-        $rootScope.$apply();
+        this.$rootScope.$apply();
 
         expect(reports).toEqual([]);
         expect(reportServiceMock.getReports).not.toHaveBeenCalled();
@@ -203,10 +206,10 @@ describe('reportFactory', function() {
             },
             paramOptions;
 
-        reportFactory.getReportParamsOptions(report).then(function(data) {
+        this.reportFactory.getReportParamsOptions(this.report).then(function(data) {
             paramOptions = data;
         });
-        $rootScope.$apply();
+        this.$rootScope.$apply();
 
         expect(paramOptions).toEqual(expectedResult);
     });
@@ -226,16 +229,16 @@ describe('reportFactory', function() {
             },
             paramOptions;
 
-        reportFactory.getReportParamsOptions(report2).then(function(data) {
+        this.reportFactory.getReportParamsOptions(this.report2).then(function(data) {
             paramOptions = data;
         });
-        $rootScope.$apply();
+        this.$rootScope.$apply();
 
         expect(paramOptions).toEqual(expectedResult);
     });
 
     it('should not retrieve options for report param with dependencies', function() {
-        paramFacility.dependencies.push('periods');
+        this.paramFacility.dependencies.push('periods');
 
         var expectedResult = {
                 periods: [
@@ -256,10 +259,10 @@ describe('reportFactory', function() {
             },
             paramOptions;
 
-        reportFactory.getReportParamsOptions(report).then(function(data) {
+        this.reportFactory.getReportParamsOptions(this.report).then(function(data) {
             paramOptions = data;
         });
-        $rootScope.$apply();
+        this.$rootScope.$apply();
 
         expect(paramOptions).toEqual(expectedResult);
     });

@@ -30,6 +30,8 @@
         'openlmis-rights',
         'openlmis-table',
         'openlmis-urls',
+        'openlmis-permissions',
+        'openlmis-main-state',
         'ui.router'
     ]);
 

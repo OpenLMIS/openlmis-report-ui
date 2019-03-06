@@ -45,6 +45,23 @@
             resolve: {
                 reports: function(reportFactory) {
                     return reportFactory.getAllReports();
+                },
+                permissions: function(permissionService, $q) {
+                    var promises = [],
+                        rights = Object.keys(REPORT_RIGHTS);
+
+                    rights.forEach(function(right) {
+                        promises.push(permissionService.hasRoleWithRight(right));
+                    });
+
+                    return $q.all(promises).then(function(result) {
+                        var permissions = {};
+                        rights.forEach(function(right) {
+                            permissions[right] = result[rights.indexOf(right)];
+                        });
+
+                        return $q.resolve(permissions);
+                    });
                 }
             }
         });

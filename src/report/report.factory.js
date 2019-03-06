@@ -57,14 +57,10 @@
          * @return {Promise}         The promise for the report.
          */
         function getReport(module, id) {
-            var deferred = $q.defer();
-
-            reportService.getReport(module, id).then(function(report) {
+            return reportService.getReport(module, id).then(function(report) {
                 report.$module = module;
-                deferred.resolve(report);
-            }, deferred.reject);
-
-            return deferred.promise;
+                return $q.resolve(report);
+            });
         }
 
         /**
@@ -79,16 +75,12 @@
          * @return {Promise}        The promise for the report array.
          */
         function getReports(module) {
-            var deferred = $q.defer();
-
-            reportService.getReports(module).then(function(reports) {
-                angular.forEach(reports, function(report) {
+            return reportService.getReports(module).then(function(reports) {
+                reports.forEach(function(report) {
                     report.$module = module;
                 });
-                deferred.resolve(reports);
-            }, deferred.reject);
-
-            return deferred.promise;
+                return $q.resolve(reports);
+            });
         }
 
         /**
@@ -108,24 +100,17 @@
             }
 
             var promises = [],
-                deferred = $q.defer(),
                 services = REPORTING_SERVICES;
 
             services.forEach(function(service) {
                 promises.push(getReports(service));
             });
 
-            $q.all(promises).then(function(reportLists) {
-                var allReports = [];
-
-                reportLists.forEach(function(reportList) {
-                    allReports = allReports.concat(reportList);
-                });
-
-                deferred.resolve(allReports);
-            }, deferred.reject);
-
-            return deferred.promise;
+            return $q.all(promises).then(function(reportLists) {
+                return reportLists.reduce(function(result, reportList) {
+                    return result.concat(reportList);
+                }, []);
+            });
         }
 
         /**
@@ -142,11 +127,10 @@
          * @return {Promise}        The promise for report params.
          */
         function getReportParamsOptions(report) {
-            var deferred = $q.defer(),
-                promises = [],
+            var promises = [],
                 parameters = {};
 
-            angular.forEach(report.templateParameters, function(param) {
+            report.templateParameters.forEach(function(param) {
                 var paramDeferred = $q.defer();
 
                 if (param.dependencies && param.dependencies.length > 0) {
@@ -174,11 +158,9 @@
                 }
             });
 
-            $q.all(promises).then(function() {
-                deferred.resolve(parameters);
-            }, deferred.reject);
-
-            return deferred.promise;
+            return $q.all(promises).then(function() {
+                return $q.resolve(parameters);
+            });
         }
 
         /**
@@ -199,12 +181,11 @@
          * @return {Promise}              The promise for report params.
          */
         function getReportParamOptions(parameter, attributes) {
-            var deferred = $q.defer();
             var uri = getReportParamSelectExpressionUri(parameter, attributes);
             var property = parameter.selectProperty;
             var displayName = parameter.displayProperty;
 
-            reportService.getReportParamsOptions(uri, parameter.selectMethod, parameter.selectBody)
+            return reportService.getReportParamsOptions(uri, parameter.selectMethod, parameter.selectBody)
                 .then(function(response) {
                     var items = [];
 
@@ -214,7 +195,7 @@
                         data = data.content;
                     }
 
-                    angular.forEach(data, function(obj) {
+                    data.forEach(function(obj) {
                         var value = property ? obj[property] : obj;
                         var name = displayName ? obj[displayName] : value;
 
@@ -226,10 +207,8 @@
                         }
                     });
 
-                    deferred.resolve(items);
-                }, deferred.reject);
-
-            return deferred.promise;
+                    return $q.resolve(items);
+                });
         }
 
         /**
