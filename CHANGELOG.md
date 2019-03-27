@@ -4,6 +4,9 @@
 New functionality added in a backwards-compatible manner:
 * [OLMIS-6055](https://openlmis.atlassian.net/browse/OLMIS-6055): Restricted displaying superset report on the list by checking rights per report.
 
+Improvements:
+* [OLMIS-6143](https://openlmis.atlassian.net/browse/OLMIS-6143): Updated Reporting Pages to reflect Superset Dashboards.
+
 5.1.0 / 2018-12-12
 ==================
 
