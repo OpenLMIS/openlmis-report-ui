@@ -1,5 +1,5 @@
-5.2.0 / WIP
-===========
+5.2.0 / 2019-05-27
+==================
 
 New functionality added in a backwards-compatible manner:
 * [OLMIS-6055](https://openlmis.atlassian.net/browse/OLMIS-6055): Restricted displaying superset report on the list by checking rights per report.
