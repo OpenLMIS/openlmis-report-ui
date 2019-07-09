@@ -7,6 +7,9 @@ New functionality added in a backwards-compatible manner:
 Improvements:
 * [OLMIS-6143](https://openlmis.atlassian.net/browse/OLMIS-6143): Updated Reporting Pages to reflect Superset Dashboards.
 
+Bug fixes:
+* [OLMIS-6330](https://openlmis.atlassian.net/browse/OLMIS-6330): fixed trigerring reference-ui build.
+
 5.1.0 / 2018-12-12
 ==================
 
