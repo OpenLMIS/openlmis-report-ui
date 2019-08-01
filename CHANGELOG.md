@@ -1,3 +1,9 @@
+5.2.1 / WIP
+==================
+
+Improvements:
+* [OLMIS-6478](https://openlmis.atlassian.net/browse/OLMIS-6478): Made Superset Server URL Configurable
+
 5.2.0 / 2019-05-27
 ==================
 
