@@ -24,6 +24,10 @@
     config.$inject = ['$stateProvider', 'SUPERSET_REPORTS'];
 
     function config($stateProvider, SUPERSET_REPORTS) {
+        if (angular.equals(SUPERSET_REPORTS, {})) {
+            // nothing to do here
+            return;
+        }
 
         $stateProvider.state('openlmis.reports.list.superset', {
             abstract: true,
@@ -36,13 +40,9 @@
             }
         });
 
-        addReporingPage($stateProvider, SUPERSET_REPORTS.REPORTING_RATE_AND_TIMELINESS);
-        addReporingPage($stateProvider, SUPERSET_REPORTS.STOCK_STATUS);
-        addReporingPage($stateProvider, SUPERSET_REPORTS.STOCKOUTS);
-        addReporingPage($stateProvider, SUPERSET_REPORTS.CONSUMPTION);
-        addReporingPage($stateProvider, SUPERSET_REPORTS.ORDERS);
-        addReporingPage($stateProvider, SUPERSET_REPORTS.ADJUSTMENTS);
-        addReporingPage($stateProvider, SUPERSET_REPORTS.ADMINISTRATIVE);
+        Object.values(SUPERSET_REPORTS).forEach(function(report) {
+            addReporingPage($stateProvider, report);
+        });
     }
 
     function addReporingPage($stateProvider, report) {

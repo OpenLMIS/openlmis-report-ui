@@ -70,7 +70,7 @@
         function onInit() {
             vm.reportCode = reportCode;
             vm.reportUrl = reportUrl;
-            vm.authUrl = 'https://superset.uat.openlmis.org/login/openlmis';
+            vm.authUrl = '${SUPERSET_URL}/login/openlmis';
         }
 
     }
