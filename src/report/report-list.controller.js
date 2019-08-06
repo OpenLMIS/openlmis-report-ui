@@ -28,9 +28,9 @@
         .module('report')
         .controller('ReportListController', controller);
 
-    controller.$inject = ['$state', 'reports', 'SUPERSET_REPORTS', 'permissions', 'REPORT_RIGHTS'];
+    controller.$inject = ['$state', 'reports', 'supersetReports', 'permissions', 'REPORT_RIGHTS'];
 
-    function controller($state, reports, SUPERSET_REPORTS, permissions,
+    function controller($state, reports, supersetReports, permissions,
                         REPORT_RIGHTS) {
         var vm = this;
 
@@ -56,7 +56,7 @@
          * @description
          * Contains information about available superset reports.
          */
-        vm.supersetReports = SUPERSET_REPORTS;
+        vm.supersetReports = supersetReports.getReports();
 
         /**
          * @ngdoc property
