@@ -3,7 +3,7 @@
 
 Improvements:
 * [OLMIS-6478](https://openlmis.atlassian.net/browse/OLMIS-6478): Made Superset Server URL Configurable
-* [OLMIS-6504](https://openlmis.atlassian.net/browse/OLMIS-6504): Move AO-297 implementation to the Core project
+* [OLMIS-6504](https://openlmis.atlassian.net/browse/OLMIS-6504): Replaced OAuth Approval page for Superset by a user-friendly modal.
 
 5.2.0 / 2019-05-27
 ==================
