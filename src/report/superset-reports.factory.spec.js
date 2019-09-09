@@ -19,19 +19,33 @@ describe('reportService', function() {
         var that = this;
 
         that.baseUrl = 'http://localhost/superset';
-        that.$stateProvider = jasmine.createSpyObj('$stateProvider', ['state']);
 
-        module('report', function($provide) {
+        module('report', function($provide, $stateProvider) {
+            that.$stateProvider = $stateProvider;
             $provide.constant('SUPERSET_URL', that.baseUrl);
         });
 
         inject(function($injector) {
             that.supersetReports = $injector.get('supersetReports');
+            that.MODAL_CANCELLED = $injector.get('MODAL_CANCELLED');
+            that.openlmisModalService = $injector.get('openlmisModalService');
+            that.$q = $injector.get('$q');
+            that.$state = $injector.get('$state');
+            that.$rootScope = $injector.get('$rootScope');
         });
 
+        that.goToState = function(state) {
+            this.$state.go(state);
+            this.$rootScope.$apply();
+        };
+
+        spyOn(this.$state, 'go').andCallThrough();
     });
 
     describe('addReporingPages', function() {
+        beforeEach(function() {
+            this.$stateProvider = jasmine.createSpyObj('$stateProvider', ['state']);
+        });
 
         it('should add reporting pages', function() {
             this.supersetReports.addReporingPages(this.$stateProvider);
@@ -71,4 +85,43 @@ describe('reportService', function() {
 
     });
 
+    describe('authorizeInSuperset', function() {
+        var testingSupersetReportState = 'openlmis.reports.list.superset.reportingRateAndTimeliness';
+        beforeEach(function() {
+            this.modalDefer = this.$q.defer();
+            var modal = {
+                promise: this.modalDefer.promise
+            };
+            spyOn(this.openlmisModalService, 'createDialog').andReturn(modal);
+
+            this.supersetReports.addReporingPages(this.$stateProvider);
+        });
+
+        it('should create the Superset OAuth Login modal', function() {
+            this.openlmisModalService.createDialog.andCallFake(function(options) {
+                expect(options.controller).toEqual('SupersetOAuthLoginController');
+            });
+
+            this.goToState(testingSupersetReportState);
+
+            expect(this.openlmisModalService.createDialog).toHaveBeenCalled();
+        });
+
+        it('should not go to a Superset report if an error occurs', function() {
+            var previousState = this.$state.current.name;
+
+            this.modalDefer.reject();
+            this.goToState(testingSupersetReportState);
+
+            expect(this.$state.current.name).toEqual(previousState);
+            expect(this.$state.current.name).not.toEqual(testingSupersetReportState);
+        });
+
+        it('should reject the state change if modal is canceled', function() {
+            this.modalDefer.reject(this.MODAL_CANCELLED);
+            this.goToState(testingSupersetReportState);
+
+            expect(this.$state.go).toHaveBeenCalledWith('openlmis.reports.list');
+        });
+    });
 });

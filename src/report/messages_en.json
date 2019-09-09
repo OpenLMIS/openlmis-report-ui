@@ -21,5 +21,12 @@
     "report.superset.consumption": "Consumption",
     "report.superset.orders": "Orders",
     "report.superset.adjustments": "Adjustments",
-    "report.superset.administrative": "Administrative"
+    "report.superset.administrative": "Administrative",
+    "report.superset.oAuthLogin.header": "Allow Superset to get access to OpenLMIS",
+    "report.superset.oAuthLogin.authorize": "Authorize",
+    "report.superset.oAuthLogin.cancel": "Cancel",
+    "report.superset.oAuthLogin.username": "Username",
+    "report.superset.oAuthLogin.password": "Password",
+    "report.superset.oAuthLogin.invalidCredentialsOrOAuthRequest": "Invalid credentials or unsuccessful OAuth request",
+    "report.superset.oAuthLogin.unsuccessfulApprovingPermissions": "Unsuccessful approving permissions for Superset"
 }

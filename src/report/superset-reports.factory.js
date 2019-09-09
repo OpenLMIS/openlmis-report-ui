@@ -99,7 +99,8 @@
                     },
                     reportCode: function() {
                         return report.code;
-                    }
+                    },
+                    authorizationInSuperset: authorizeInSuperset
                 }
             });
         }
@@ -116,6 +117,25 @@
             };
         }
 
+        function authorizeInSuperset(loadingModalService, openlmisModalService, $q, $state, MODAL_CANCELLED) {
+            loadingModalService.close();
+            var dialog = openlmisModalService.createDialog({
+                backdrop: 'static',
+                keyboard: false,
+                controller: 'SupersetOAuthLoginController',
+                controllerAs: 'vm',
+                templateUrl: 'report/superset-oauth-login.html',
+                show: true
+            });
+            return dialog.promise
+                .catch(function(reason) {
+                    if (reason === MODAL_CANCELLED) {
+                        $state.go('openlmis.reports.list');
+                        return $q.resolve();
+                    }
+                    return $q.reject();
+                });
+        }
     }
 
 })();
