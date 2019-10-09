@@ -15,36 +15,61 @@
 
 describe('SupersetReportController', function() {
 
-    beforeEach(function() {
-        module('report');
+    var vm, $controller, $q, $rootScope, reportCode, reportUrl,
+        supersetLocaleService, SUPERSET_URL;
 
-        inject(function($injector) {
-            this.$controller = $injector.get('$controller');
+    beforeEach(function() {
+        SUPERSET_URL = 'http://localhost/superset';
+        reportCode = 'reportCode';
+        reportUrl = SUPERSET_URL + '/theReport';
+
+        module('report', function($provide) {
+            $provide.constant('SUPERSET_URL', SUPERSET_URL);
         });
 
-        this.reportCode = 'test';
-        this.reportUrl = 'http://localhost';
+        inject(function($injector) {
+            $controller = $injector.get('$controller');
+            $q = $injector.get('$q');
+            $rootScope = $injector.get('$rootScope');
 
-        this.vm = this.$controller('SupersetReportController', {
-            reportCode: this.reportCode,
-            reportUrl: this.reportUrl
+            supersetLocaleService = $injector.get('supersetLocaleService');
+        });
+
+        spyOn(supersetLocaleService, 'changeLocale').andReturn($q.resolve());
+
+        vm = $controller('SupersetReportController', {
+            reportCode: reportCode,
+            reportUrl: reportUrl
         });
     });
 
-    describe('$onInit', function() {
+    describe('onInit', function() {
 
         beforeEach(function() {
-            this.vm.$onInit();
+            vm.$onInit();
         });
 
         it('should expose Superset iFrame src', function() {
-            expect(this.vm.reportUrl).toEqual(this.reportUrl);
+            expect(vm.reportUrl).toEqual(reportUrl);
         });
 
         it('should expose report code', function() {
-            expect(this.vm.reportCode).toEqual(this.reportCode);
+            expect(vm.reportCode).toEqual(reportCode);
         });
 
-    });
+        it('should expose authUrl', function() {
+            expect(vm.authUrl).not.toBeUndefined();
+        });
 
+        it('should expose isReady', function() {
+            expect(vm.isReady).toEqual(false);
+        });
+
+        it('should adjust language in Superset and change isReady flag', function() {
+            $rootScope.$apply();
+
+            expect(supersetLocaleService.changeLocale).toHaveBeenCalled();
+            expect(vm.isReady).toBe(true);
+        });
+    });
 });
