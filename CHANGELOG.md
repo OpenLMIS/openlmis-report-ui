@@ -1,3 +1,9 @@
+5.2.2 / WIP
+==================
+
+Improvements:
+* [OLMIS-6589](https://openlmis.atlassian.net/browse/OLMIS-6589): Hide Superset's Header
+
 5.2.1 / 2019-10-17
 ==================
 

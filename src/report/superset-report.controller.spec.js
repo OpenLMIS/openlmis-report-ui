@@ -15,36 +15,60 @@
 
 describe('SupersetReportController', function() {
 
-    beforeEach(function() {
-        module('report');
+    var that = this;
 
-        inject(function($injector) {
-            this.$controller = $injector.get('$controller');
+    beforeEach(function() {
+        that.SUPERSET_URL = 'http://localhost/superset';
+        that.reportCode = 'reportCode';
+        that.reportUrl = that.SUPERSET_URL + '/theReport';
+
+        module('report', function($provide) {
+            $provide.constant('SUPERSET_URL', that.SUPERSET_URL);
         });
 
-        this.reportCode = 'test';
-        this.reportUrl = 'http://localhost';
+        inject(function($injector) {
+            that.$controller = $injector.get('$controller');
+            that.$q = $injector.get('$q');
+            that.$rootScope = $injector.get('$rootScope');
 
-        this.vm = this.$controller('SupersetReportController', {
-            reportCode: this.reportCode,
-            reportUrl: this.reportUrl
+            that.supersetLocaleService = $injector.get('supersetLocaleService');
+        });
+
+        spyOn(that.supersetLocaleService, 'changeLocale').andReturn(that.$q.resolve());
+
+        that.vm = that.$controller('SupersetReportController', {
+            reportCode: that.reportCode,
+            reportUrl: that.reportUrl
         });
     });
 
-    describe('$onInit', function() {
+    describe('onInit', function() {
 
         beforeEach(function() {
-            this.vm.$onInit();
+            that.vm.$onInit();
         });
 
         it('should expose Superset iFrame src', function() {
-            expect(this.vm.reportUrl).toEqual(this.reportUrl);
+            expect(that.vm.reportUrl).toEqual(that.reportUrl);
         });
 
         it('should expose report code', function() {
-            expect(this.vm.reportCode).toEqual(this.reportCode);
+            expect(that.vm.reportCode).toEqual(that.reportCode);
         });
 
-    });
+        it('should expose authUrl', function() {
+            expect(that.vm.authUrl).not.toBeUndefined();
+        });
 
+        it('should expose isReady', function() {
+            expect(that.vm.isReady).toEqual(false);
+        });
+
+        it('should adjust language in Superset and change isReady flag', function() {
+            that.$rootScope.$apply();
+
+            expect(that.supersetLocaleService.changeLocale).toHaveBeenCalled();
+            expect(that.vm.isReady).toBe(true);
+        });
+    });
 });
