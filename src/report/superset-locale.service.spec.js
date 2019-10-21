@@ -13,7 +13,7 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-ddescribe('supersetLocaleService', function() {
+describe('supersetLocaleService', function() {
 
     var that = this;
 
@@ -35,12 +35,14 @@ ddescribe('supersetLocaleService', function() {
 
     describe('changeLocale', function() {
 
+        // eslint-disable-next-line jasmine/missing-expect
         it('should send change language request', function() {
             that.$httpBackend.expectGET(that.SUPERSET_URL + '/lang/change/' + that.DEFAULT_LANGUAGE);
 
             that.supersetLocaleService.changeLocale(that.DEFAULT_LANGUAGE);
         });
 
+        // eslint-disable-next-line jasmine/missing-expect
         it('should change the language to default if a not known locale provided', function() {
             that.$httpBackend.expectGET(that.SUPERSET_URL + '/lang/change/' + that.DEFAULT_LANGUAGE);
 
