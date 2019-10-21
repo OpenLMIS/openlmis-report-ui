@@ -15,61 +15,60 @@
 
 describe('SupersetReportController', function() {
 
-    var vm, $controller, $q, $rootScope, reportCode, reportUrl,
-        supersetLocaleService, SUPERSET_URL;
+    var that = this;
 
     beforeEach(function() {
-        SUPERSET_URL = 'http://localhost/superset';
-        reportCode = 'reportCode';
-        reportUrl = SUPERSET_URL + '/theReport';
+        that.SUPERSET_URL = 'http://localhost/superset';
+        that.reportCode = 'reportCode';
+        that.reportUrl = that.SUPERSET_URL + '/theReport';
 
         module('report', function($provide) {
-            $provide.constant('SUPERSET_URL', SUPERSET_URL);
+            $provide.constant('SUPERSET_URL', that.SUPERSET_URL);
         });
 
         inject(function($injector) {
-            $controller = $injector.get('$controller');
-            $q = $injector.get('$q');
-            $rootScope = $injector.get('$rootScope');
+            that.$controller = $injector.get('$controller');
+            that.$q = $injector.get('$q');
+            that.$rootScope = $injector.get('$rootScope');
 
-            supersetLocaleService = $injector.get('supersetLocaleService');
+            that.supersetLocaleService = $injector.get('supersetLocaleService');
         });
 
-        spyOn(supersetLocaleService, 'changeLocale').andReturn($q.resolve());
+        spyOn(that.supersetLocaleService, 'changeLocale').andReturn(that.$q.resolve());
 
-        vm = $controller('SupersetReportController', {
-            reportCode: reportCode,
-            reportUrl: reportUrl
+        that.vm = that.$controller('SupersetReportController', {
+            reportCode: that.reportCode,
+            reportUrl: that.reportUrl
         });
     });
 
     describe('onInit', function() {
 
         beforeEach(function() {
-            vm.$onInit();
+            that.vm.$onInit();
         });
 
         it('should expose Superset iFrame src', function() {
-            expect(vm.reportUrl).toEqual(reportUrl);
+            expect(that.vm.reportUrl).toEqual(that.reportUrl);
         });
 
         it('should expose report code', function() {
-            expect(vm.reportCode).toEqual(reportCode);
+            expect(that.vm.reportCode).toEqual(that.reportCode);
         });
 
         it('should expose authUrl', function() {
-            expect(vm.authUrl).not.toBeUndefined();
+            expect(that.vm.authUrl).not.toBeUndefined();
         });
 
         it('should expose isReady', function() {
-            expect(vm.isReady).toEqual(false);
+            expect(that.vm.isReady).toEqual(false);
         });
 
         it('should adjust language in Superset and change isReady flag', function() {
-            $rootScope.$apply();
+            that.$rootScope.$apply();
 
-            expect(supersetLocaleService.changeLocale).toHaveBeenCalled();
-            expect(vm.isReady).toBe(true);
+            expect(that.supersetLocaleService.changeLocale).toHaveBeenCalled();
+            expect(that.vm.isReady).toBe(true);
         });
     });
 });

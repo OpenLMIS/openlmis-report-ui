@@ -13,22 +13,22 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-describe('supersetLocaleService', function() {
+ddescribe('supersetLocaleService', function() {
 
-    var supersetLocaleService, $httpBackend, SUPERSET_URL, DEFAULT_LANGUAGE;
+    var that = this;
 
     beforeEach(function() {
-        SUPERSET_URL = 'http://localhost/superset';
-        DEFAULT_LANGUAGE = 'en';
+        that.SUPERSET_URL = 'http://localhost/superset';
+        that.DEFAULT_LANGUAGE = 'en';
 
         module('report', function($provide) {
-            $provide.constant('SUPERSET_URL', SUPERSET_URL);
-            $provide.constant('DEFAULT_LANGUAGE', DEFAULT_LANGUAGE);
+            $provide.constant('SUPERSET_URL', that.SUPERSET_URL);
+            $provide.constant('DEFAULT_LANGUAGE', that.DEFAULT_LANGUAGE);
         });
 
         inject(function($injector) {
-            supersetLocaleService = $injector.get('supersetLocaleService');
-            $httpBackend = $injector.get('$httpBackend');
+            that.supersetLocaleService = $injector.get('supersetLocaleService');
+            that.$httpBackend = $injector.get('$httpBackend');
         });
 
     });
@@ -36,20 +36,20 @@ describe('supersetLocaleService', function() {
     describe('changeLocale', function() {
 
         it('should send change language request', function() {
-            $httpBackend.expectGET(SUPERSET_URL + '/lang/change/' + DEFAULT_LANGUAGE);
+            that.$httpBackend.expectGET(that.SUPERSET_URL + '/lang/change/' + that.DEFAULT_LANGUAGE);
 
-            supersetLocaleService.changeLocale(DEFAULT_LANGUAGE);
+            that.supersetLocaleService.changeLocale(that.DEFAULT_LANGUAGE);
         });
 
         it('should change the language to default if a not known locale provided', function() {
-            $httpBackend.expectGET(SUPERSET_URL + '/lang/change/' + DEFAULT_LANGUAGE);
+            that.$httpBackend.expectGET(that.SUPERSET_URL + '/lang/change/' + that.DEFAULT_LANGUAGE);
 
-            supersetLocaleService.changeLocale('not_known_locale');
+            that.supersetLocaleService.changeLocale('not_known_locale');
         });
 
         afterEach(function() {
-            $httpBackend.verifyNoOutstandingExpectation();
-            $httpBackend.verifyNoOutstandingRequest();
+            that.$httpBackend.verifyNoOutstandingExpectation();
+            that.$httpBackend.verifyNoOutstandingRequest();
         });
     });
 
