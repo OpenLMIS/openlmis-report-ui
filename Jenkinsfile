@@ -90,7 +90,7 @@ pipeline {
                 }
             }
         }
-        stage('Build reference-ui') {
+        /*stage('Build reference-ui') {
             when {
                 expression {
                     return "${env.GIT_BRANCH}" == 'master'
@@ -158,7 +158,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
         stage('Push image') {
             when {
                 expression {
