@@ -36,25 +36,25 @@
         if (SUPERSET_URL.substr(0, 2) !== '${') {
             reports = {
                 REPORTING_RATE_AND_TIMELINESS: createReport('reportingRateAndTimeliness',
-                    SUPERSET_URL + '/superset/dashboard/1/',
+                    SUPERSET_URL + '/superset/dashboard/reporting_rate_and_timeliness/',
                     'REPORTING_RATE_AND_TIMELINESS_REPORT_VIEW'),
                 STOCK_STATUS: createReport('stockStatus',
-                    SUPERSET_URL + '/superset/dashboard/6/',
+                    SUPERSET_URL + '/superset/dashboard/stock_status/',
                     'STOCK_STATUS_REPORT_VIEW'),
                 STOCKOUTS: createReport('stockouts',
-                    SUPERSET_URL + '/superset/dashboard/2/',
+                    SUPERSET_URL + '/superset/dashboard/stockouts/',
                     'STOCKOUTS_REPORT_VIEW'),
                 CONSUMPTION: createReport('consumption',
-                    SUPERSET_URL + '/superset/dashboard/3/',
+                    SUPERSET_URL + '/superset/dashboard/consumption/',
                     'CONSUMPTION_REPORT_VIEW'),
                 ORDERS: createReport('orders',
-                    SUPERSET_URL + '/superset/dashboard/4/',
+                    SUPERSET_URL + '/superset/dashboard/orders/',
                     'ORDERS_REPORT_VIEW'),
                 ADJUSTMENTS: createReport('adjustments',
-                    SUPERSET_URL + '/superset/dashboard/5/',
+                    SUPERSET_URL + '/superset/dashboard/adjustments/',
                     'ADJUSTMENTS_REPORT_VIEW'),
                 ADMINISTRATIVE: createReport('administrative',
-                    SUPERSET_URL + '/superset/dashboard/7/',
+                    SUPERSET_URL + '/superset/dashboard/administrative/',
                     'ADMINISTRATIVE_REPORT_VIEW')
             };
         }
