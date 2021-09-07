@@ -28,7 +28,7 @@ describe('reportService', function() {
             $provide.factory('openlmisUrlFactory', function() {
                 return urlFactoryMock;
             });
-            urlFactoryMock.andCallFake(function(parameter) {
+            urlFactoryMock.and.callFake(function(parameter) {
                 return parameter;
             });
         });

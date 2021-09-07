@@ -94,7 +94,7 @@ describe('reportFactory', function() {
 
         var context = this;
 
-        reportServiceMock.getReport.andCallFake(function(module, id) {
+        reportServiceMock.getReport.and.callFake(function(module, id) {
             if (module === context.REQUISITIONS) {
                 if (id === context.REPORT_ID) {
                     return context.$q.when(context.report);
@@ -105,13 +105,13 @@ describe('reportFactory', function() {
             }
         });
 
-        reportServiceMock.getReports.andCallFake(function(module) {
+        reportServiceMock.getReports.and.callFake(function(module) {
             if (module === context.REQUISITIONS) {
                 return context.$q.when([context.report, context.report2]);
             }
         });
 
-        reportServiceMock.getReportParamsOptions.andCallFake(function(uri) {
+        reportServiceMock.getReportParamsOptions.and.callFake(function(uri) {
             if (uri === context.FACILITIES_URL) {
                 return context.$q.when({
                     data: context.facilityOptions
@@ -149,7 +149,7 @@ describe('reportFactory', function() {
     });
 
     it('should get all reports', function() {
-        spyOn(this.authorizationService, 'hasRight').andReturn(true);
+        spyOn(this.authorizationService, 'hasRight').and.returnValue(true);
 
         var reports;
 
@@ -163,7 +163,7 @@ describe('reportFactory', function() {
     });
 
     it('should not get reports when user does not have REPORTS_VIEW right', function() {
-        spyOn(this.authorizationService, 'hasRight').andReturn(false);
+        spyOn(this.authorizationService, 'hasRight').and.returnValue(false);
 
         var reports;
 

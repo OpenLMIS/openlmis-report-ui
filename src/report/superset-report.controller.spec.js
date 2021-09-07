@@ -34,7 +34,7 @@ describe('SupersetReportController', function() {
             that.supersetLocaleService = $injector.get('supersetLocaleService');
         });
 
-        spyOn(that.supersetLocaleService, 'changeLocale').andReturn(that.$q.resolve());
+        spyOn(that.supersetLocaleService, 'changeLocale').and.returnValue(that.$q.resolve());
 
         that.vm = that.$controller('SupersetReportController', {
             reportCode: that.reportCode,
