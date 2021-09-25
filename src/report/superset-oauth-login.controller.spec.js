@@ -36,12 +36,12 @@ describe('SupersetOAuthLoginController', function() {
             var UserDataBuilder = $injector.get('UserDataBuilder');
             user = new UserDataBuilder().build();
 
-            spyOn(authorizationService, 'getUser').and.returnValue(user);
+            spyOn(authorizationService, 'getUser').andReturn(user);
             spyOn(loadingModalService, 'open');
             spyOn(loadingModalService, 'close');
-            spyOn(supersetOAuthService, 'authorizeInSuperset').and.returnValue($q.resolve());
+            spyOn(supersetOAuthService, 'authorizeInSuperset').andReturn($q.resolve());
             spyOn(supersetOAuthService, 'checkAuthorizationInSuperset')
-                .and.returnValue($q.resolve(isNotAuthorizedResponse));
+                .andReturn($q.resolve(isNotAuthorizedResponse));
         });
 
         modalDeferred = $q.defer();
@@ -89,7 +89,7 @@ describe('SupersetOAuthLoginController', function() {
 
         it('should skip modal if the user is already authorized', function() {
             supersetOAuthService.checkAuthorizationInSuperset
-                .and.returnValue($q.resolve(isAuthorizedResponse));
+                .andReturn($q.resolve(isAuthorizedResponse));
 
             vm.$onInit();
             $rootScope.$apply();
@@ -108,7 +108,7 @@ describe('SupersetOAuthLoginController', function() {
 
         it('should reject modal if cannot fetch response from Supserset', function() {
             supersetOAuthService.checkAuthorizationInSuperset
-                .and.returnValue($q.reject());
+                .andReturn($q.reject());
 
             vm.$onInit();
             $rootScope.$apply();
@@ -161,7 +161,7 @@ describe('SupersetOAuthLoginController', function() {
         });
 
         it('should not close the modal if credentials are not correct', function() {
-            supersetOAuthService.authorizeInSuperset.and.returnValue($q.reject('openlmisLogin.invalidCredentials'));
+            supersetOAuthService.authorizeInSuperset.andReturn($q.reject('openlmisLogin.invalidCredentials'));
 
             vm.doLogin();
             $rootScope.$apply();

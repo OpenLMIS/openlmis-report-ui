@@ -39,7 +39,7 @@ describe('reportService', function() {
             this.$rootScope.$apply();
         };
 
-        spyOn(this.$state, 'go').and.callThrough();
+        spyOn(this.$state, 'go').andCallThrough();
     });
 
     describe('addReporingPages', function() {
@@ -92,13 +92,13 @@ describe('reportService', function() {
             var modal = {
                 promise: this.modalDefer.promise
             };
-            spyOn(this.openlmisModalService, 'createDialog').and.returnValue(modal);
+            spyOn(this.openlmisModalService, 'createDialog').andReturn(modal);
 
             this.supersetReports.addReporingPages(this.$stateProvider);
         });
 
         it('should create the Superset OAuth Login modal', function() {
-            this.openlmisModalService.createDialog.and.callFake(function(options) {
+            this.openlmisModalService.createDialog.andCallFake(function(options) {
                 expect(options.controller).toEqual('SupersetOAuthLoginController');
             });
 

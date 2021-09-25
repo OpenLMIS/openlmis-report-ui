@@ -56,8 +56,8 @@ describe('openlmis.reports.list state', function() {
         var $q = this.$q;
         var REPORT_RIGHTS = this.REPORT_RIGHTS;
 
-        spyOn(this.reportFactory, 'getAllReports').and.returnValue(this.$q.resolve(this.reports));
-        spyOn(this.permissionService, 'hasRoleWithRight').and.callFake(function(right) {
+        spyOn(this.reportFactory, 'getAllReports').andReturn(this.$q.resolve(this.reports));
+        spyOn(this.permissionService, 'hasRoleWithRight').andCallFake(function(right) {
             return $q.resolve(right === REPORT_RIGHTS.REPORTING_RATE_AND_TIMELINESS_REPORT_VIEW);
         });
 
