@@ -133,7 +133,6 @@ pipeline {
 
                                 docker-compose run --entrypoint ./sonar.sh report-ui
                                 docker-compose down --volumes
-                                sudo rm -rf node_modules/
                             '''
                             // workaround because sonar plugin retrieve the path directly from the output
                             sh 'echo "Working dir: ${WORKSPACE}/.sonar"'
@@ -160,6 +159,11 @@ pipeline {
                 failure {
                     script {
                         notifyAfterFailure()
+                    }
+                }
+                cleanup {
+                    script {
+                        sh "sudo rm -rf ${WORKSPACE}/{*,.*} || true"
                     }
                 }
             }
