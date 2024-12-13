@@ -14,17 +14,44 @@
  */
 
 (function() {
+
     'use strict';
 
     /**
-    * @ngdoc object
-    * @name report.SUPERSET_URL
-    *
-    * @description
-    * This is constant defining superset URL.
-    */
+     * @ngdoc object
+     * @name report.REPORT_TYPES
+     *
+     * @description
+     * This is constant for report types.
+     */
     angular
         .module('report')
-        .constant('SUPERSET_URL', 'https://superset-uat.openlmis.org');
+        .constant('REPORT_TYPES', types());
+
+    function types() {
+        var REPORT_TYPES = {
+            SUPERSET: 'SUPERSET',
+            POWERBI: 'POWERBI',
+            getTypes: getTypes
+        };
+        return REPORT_TYPES;
+
+        /**
+         * @ngdoc method
+         * @methodOf report.REPORT_TYPES
+         * @name getTypes
+         *
+         * @description
+         * Returns all available report types as a list.
+         *
+         * @return  {Array} the list of available report types
+         */
+        function getTypes() {
+            return [
+                REPORT_TYPES.SUPERSET,
+                REPORT_TYPES.POWERBI
+            ];
+        }
+    }
 
 })();

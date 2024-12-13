@@ -28,10 +28,10 @@
         .module('report')
         .controller('SupersetReportController', SupersetReportController);
 
-    SupersetReportController.inject = ['reportCode', 'reportUrl', 'loadingModalService', 'messageService',
-        'supersetLocaleService', 'SUPERSET_URL'];
+    SupersetReportController.inject = ['reportName', 'isSupersetReport', 'reportUrl', 'loadingModalService',
+        'messageService', 'supersetLocaleService', 'SUPERSET_URL'];
 
-    function SupersetReportController(reportCode, reportUrl, loadingModalService, messageService,
+    function SupersetReportController(reportName, isSupersetReport, reportUrl, loadingModalService, messageService,
                                       supersetLocaleService, SUPERSET_URL) {
         var vm = this;
         vm.$onInit = onInit;
@@ -39,13 +39,13 @@
         /**
          * @ngdoc property
          * @propertyOf report.controller:SupersetReportController
-         * @name reportCode
+         * @name reportName
          * @type {string}
          *
          * @description
-         * The superset report code.
+         * The superset report name.
          */
-        vm.reportCode = undefined;
+        vm.reportName = undefined;
 
         /**
          * @ngdoc property
@@ -81,11 +81,14 @@
         vm.isReady = false;
 
         function onInit() {
-            vm.reportCode = reportCode;
+            vm.reportName = reportName;
             vm.reportUrl = reportUrl;
+            vm.isSupersetReport = isSupersetReport;
             vm.authUrl = SUPERSET_URL + '/login/openlmis';
 
-            adjustSupersetLanguage();
+            if (vm.isSupersetReport) {
+                adjustSupersetLanguage();
+            }
         }
 
         function adjustSupersetLanguage() {

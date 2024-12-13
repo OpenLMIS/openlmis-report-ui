@@ -14,17 +14,20 @@
  */
 
 (function() {
+
     'use strict';
 
     /**
-    * @ngdoc object
-    * @name report.SUPERSET_URL
-    *
-    * @description
-    * This is constant defining superset URL.
-    */
-    angular
-        .module('report')
-        .constant('SUPERSET_URL', 'https://superset-uat.openlmis.org');
+     * @module report-category
+     *
+     * @description
+     * Responsible for providing report category info to other modules.
+     */
+    angular.module('report-category', [
+        'openlmis-i18n',
+        'ngResource',
+        'openlmis-repository',
+        'referencedata'
+    ]);
 
 })();

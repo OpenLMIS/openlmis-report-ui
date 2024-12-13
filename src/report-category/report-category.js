@@ -14,17 +14,41 @@
  */
 
 (function() {
+
     'use strict';
 
     /**
-    * @ngdoc object
-    * @name report.SUPERSET_URL
-    *
-    * @description
-    * This is constant defining superset URL.
-    */
+     * @ngdoc service
+     * @name report-category.ReportCategory
+     *
+     * @description
+     * Represents a single ReportCategory.
+     */
     angular
-        .module('report')
-        .constant('SUPERSET_URL', 'https://superset-uat.openlmis.org');
+        .module('report-category')
+        .factory('ReportCategory', ReportCategory);
+
+    function ReportCategory() {
+
+        return ReportCategory;
+
+        /**
+         * @ngdoc method
+         * @methodOf report-category.ReportCategory
+         * @name ReportCategory
+         *
+         * @description
+         * Creates a new instance of the ReportCategory class.
+         *
+         * @param  {String}  id                 the id
+         * @param  {String}  name               the report category name
+         * @return {ReportCategory}             the ReportCategory object
+         */
+        function ReportCategory(id, name) {
+            this.id = id;
+            this.name = name;
+        }
+
+    }
 
 })();

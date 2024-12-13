@@ -14,17 +14,17 @@
  */
 
 (function() {
+
     'use strict';
 
-    /**
-    * @ngdoc object
-    * @name report.SUPERSET_URL
-    *
-    * @description
-    * This is constant defining superset URL.
-    */
     angular
-        .module('report')
-        .constant('SUPERSET_URL', 'https://superset-uat.openlmis.org');
+        .module('openlmis-home')
+        .run(run);
+
+    run.$inject = [];
+
+    function run() {
+        // remove csp adding because of powerbi issues
+    }
 
 })();

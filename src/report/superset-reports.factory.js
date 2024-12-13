@@ -28,39 +28,14 @@
         .module('report')
         .factory('supersetReports', supersetReports);
 
-    supersetReports.$inject = ['SUPERSET_URL'];
+    supersetReports.$inject = ['SUPERSET_URL', 'reportDashboardService'];
 
-    function supersetReports(SUPERSET_URL) {
-        var reports = {};
-
-        if (SUPERSET_URL.substr(0, 2) !== '${') {
-            reports = {
-                REPORTING_RATE_AND_TIMELINESS: createReport('reportingRateAndTimeliness',
-                    SUPERSET_URL + '/superset/dashboard/reporting_rate_and_timeliness/',
-                    'REPORTING_RATE_AND_TIMELINESS_REPORT_VIEW'),
-                STOCK_STATUS: createReport('stockStatus',
-                    SUPERSET_URL + '/superset/dashboard/stock_status/',
-                    'STOCK_STATUS_REPORT_VIEW'),
-                STOCKOUTS: createReport('stockouts',
-                    SUPERSET_URL + '/superset/dashboard/stockouts/',
-                    'STOCKOUTS_REPORT_VIEW'),
-                CONSUMPTION: createReport('consumption',
-                    SUPERSET_URL + '/superset/dashboard/consumption/',
-                    'CONSUMPTION_REPORT_VIEW'),
-                ORDERS: createReport('orders',
-                    SUPERSET_URL + '/superset/dashboard/orders/',
-                    'ORDERS_REPORT_VIEW'),
-                ADJUSTMENTS: createReport('adjustments',
-                    SUPERSET_URL + '/superset/dashboard/adjustments/',
-                    'ADJUSTMENTS_REPORT_VIEW'),
-                ADMINISTRATIVE: createReport('administrative',
-                    SUPERSET_URL + '/superset/dashboard/administrative/',
-                    'ADMINISTRATIVE_REPORT_VIEW')
-            };
-        }
+    function supersetReports(SUPERSET_URL, reportDashboardService) {
+        var reports = reportDashboardService.getAll();
 
         return {
             getReports: getReports,
+            getHomePageReport: getHomePageReport,
             addReporingPages: addReporingPages
         };
 
@@ -87,21 +62,13 @@
         }
 
         function addReporingPage($stateProvider, report) {
-            $stateProvider.state('openlmis.reports.list.superset.' + report.code, {
-                url: '/' + report.code,
-                label: 'report.superset.' + report.code,
+            $stateProvider.state('openlmis.reports.list.superset.' + report.id, {
+                url: '/' + report.id,
+                label: report.name,
                 controller: 'SupersetReportController',
                 templateUrl: 'report/superset-report.html',
                 controllerAs: 'vm',
-                resolve: {
-                    reportUrl: function($sce) {
-                        return $sce.trustAsResourceUrl(report.url);
-                    },
-                    reportCode: function() {
-                        return report.code;
-                    },
-                    authorizationInSuperset: authorizeInSuperset
-                }
+                resolve: createResolve(report)
             });
         }
 
@@ -109,12 +76,26 @@
             return reports;
         }
 
-        function createReport(code, url, right) {
-            return {
-                code: code,
-                url: url + '?standalone=true',
-                right: right
+        function getHomePageReport() {
+            return reportDashboardService.getHomePageReport();
+        }
+
+        function createResolve(report) {
+            var resolve = {
+                reportUrl: function($sce) {
+                    return $sce.trustAsResourceUrl(report.url);
+                },
+                reportName: function() {
+                    return report.name;
+                },
+                isSupersetReport: function() {
+                    return report.type === 'Superset';
+                }
             };
+            if (report.type === 'Superset') {
+                resolve['authorizationInSuperset'] = authorizeInSuperset;
+            }
+            return resolve;
         }
 
         function authorizeInSuperset(loadingModalService, openlmisModalService, $q, $state, MODAL_CANCELLED) {
