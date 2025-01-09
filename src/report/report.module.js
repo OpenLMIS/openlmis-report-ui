@@ -34,7 +34,8 @@
         'openlmis-main-state',
         'ui.router',
         'openlmis-superset',
-        'report-category'
+        'report-category',
+        'report-dashboard'
     ]);
 
 })();
