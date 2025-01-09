@@ -28,13 +28,12 @@
         .module('report')
         .controller('ReportListController', controller);
 
-    controller.$inject = ['$state', 'reports', 'supersetReports', 'permissions', 'REPORT_RIGHTS'];
+    controller.$inject = ['loadingModalService', 'reportCategories', 'jasperReports', 'dashboardReportsList'];
 
-    function controller($state, reports, supersetReports, permissions,
-                        REPORT_RIGHTS) {
+    function controller(loadingModalService, reportCategories, jasperReports, dashboardReportsList) {
         var vm = this;
-
-        vm.hasRight = hasRight;
+        vm.result = {};
+        vm.$onInit = onInit;
 
         /**
          * @ngdoc property
@@ -43,45 +42,60 @@
          * @type {Array}
          *
          * @description
-         * The list of all available reports.
+         * The list of all available reportCategories.
          */
-        vm.reports = reports;
+        vm.reportCategories = reportCategories;
 
         /**
          * @ngdoc property
          * @propertyOf report.controller:ReportListController
-         * @name supersetReports
-         * @type {Object}
+         * @name reports
+         * @type {Array}
          *
          * @description
-         * Contains information about available superset reports.
+         * The list of all available jasper reports.
          */
-        vm.supersetReports = supersetReports.getReports();
+        vm.jasperReports = jasperReports;
 
         /**
          * @ngdoc property
          * @propertyOf report.controller:ReportListController
-         * @name permissions
-         * @type {Object}
+         * @name reports
+         * @type {Array}
          *
          * @description
-         * Contains information about user report rights.
+         * The list of all available dashboard Reports.
          */
-        vm.permissions = permissions;
+        vm.dashboardReportsList = dashboardReportsList;
 
-        /**
-         * @ngdoc method
-         * @methodOf report.controller:ReportListController
-         * @name hasRight
-         *
-         * @description
-         * Returns true if user has right to manage the proper report.
-         *
-         * @param {String}   rightName  the right name
-         * @return {Boolean}            true if the user has the right, otherwise false
-         */
-        function hasRight(rightName) {
-            return vm.permissions[rightName] || vm.permissions[REPORT_RIGHTS.REPORTS_VIEW];
+        function onInit() {
+            loadingModalService.open();
+            sortReports();
+        }
+
+        function sortReports() {
+            vm.reportCategories.forEach(function(category) {
+                vm.result[category.name] = [];
+            });
+
+            vm.jasperReports.forEach(function(element) {
+                element['uisref'] = '.generate({module: report.$module, report: report.id})';
+                // remove after adding category to BE
+                if (!element.category) {
+                    element['category'] = {
+                        name: 'Default Category'
+                    };
+                }
+                // ends here
+                vm.result[element.category.name].push(element);
+            });
+
+            vm.dashboardReportsList.forEach(function(element) {
+                element['uisref'] = 'openlmis.reports.list.dashboard.' + element.id;
+                vm.result[element.category.name].push(element);
+            });
+
+            loadingModalService.close();
         }
     }
 })();

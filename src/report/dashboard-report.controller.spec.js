@@ -13,14 +13,14 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-describe('SupersetReportController', function() {
+describe('DashboardReportController', function() {
 
     var that = this;
 
     beforeEach(function() {
         that.SUPERSET_URL = 'http://localhost/superset';
-        that.reportCode = 'reportCode';
         that.reportUrl = that.SUPERSET_URL + '/theReport';
+        that.isSupersetReport = true;
 
         module('report', function($provide) {
             $provide.constant('SUPERSET_URL', that.SUPERSET_URL);
@@ -36,9 +36,10 @@ describe('SupersetReportController', function() {
 
         spyOn(that.supersetLocaleService, 'changeLocale').andReturn(that.$q.resolve());
 
-        that.vm = that.$controller('SupersetReportController', {
-            reportCode: that.reportCode,
-            reportUrl: that.reportUrl
+        that.vm = that.$controller('DashboardReportController', {
+            reportName: that.reportName,
+            reportUrl: that.reportUrl,
+            isSupersetReport: that.isSupersetReport
         });
     });
 
@@ -48,12 +49,16 @@ describe('SupersetReportController', function() {
             that.vm.$onInit();
         });
 
-        it('should expose Superset iFrame src', function() {
+        it('should expose dashboard iFrame src', function() {
             expect(that.vm.reportUrl).toEqual(that.reportUrl);
         });
 
-        it('should expose report code', function() {
-            expect(that.vm.reportCode).toEqual(that.reportCode);
+        it('should expose isSupersetReport flag', function() {
+            expect(that.vm.isSupersetReport).toEqual(that.isSupersetReport);
+        });
+
+        it('should expose report name', function() {
+            expect(that.vm.reportName).toEqual(that.reportName);
         });
 
         it('should expose authUrl', function() {

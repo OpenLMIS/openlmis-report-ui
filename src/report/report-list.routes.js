@@ -33,39 +33,21 @@
             templateUrl: 'report/report-list.html',
             url: '/list',
             accessRights: [
-                REPORT_RIGHTS.REPORTS_VIEW,
-                REPORT_RIGHTS.REPORTING_RATE_AND_TIMELINESS_REPORT_VIEW,
-                REPORT_RIGHTS.STOCK_STATUS_REPORT_VIEW,
-                REPORT_RIGHTS.STOCKOUTS_REPORT_VIEW,
-                REPORT_RIGHTS.CONSUMPTION_REPORT_VIEW,
-                REPORT_RIGHTS.ORDERS_REPORT_VIEW,
-                REPORT_RIGHTS.ADJUSTMENTS_REPORT_VIEW,
-                REPORT_RIGHTS.ADMINISTRATIVE_REPORT_VIEW
+                REPORT_RIGHTS.REPORTS_VIEW
             ],
             resolve: {
-                reports: function(reportFactory) {
+                reportCategories: function(reportCategoryService) {
+                    return reportCategoryService.getAll().then(function(categories) {
+                        return categories.content;
+                    });
+                },
+                jasperReports: function(reportFactory) {
                     return reportFactory.getAllReports();
                 },
-                permissions: function(permissionService, $q) {
-                    var promises = [],
-                        rights = Object.keys(REPORT_RIGHTS);
-
-                    rights.forEach(function(right) {
-                        promises.push(permissionService.hasRoleWithRight(right));
-                    });
-
-                    return $q.all(promises).then(function(result) {
-                        var permissions = {};
-                        rights.forEach(function(right) {
-                            permissions[right] = result[rights.indexOf(right)];
-                        });
-
-                        return $q.resolve(permissions);
-                    });
+                dashboardReportsList: function(dashboardReports) {
+                    return dashboardReports.getReports();
                 }
             }
         });
-
     }
-
 })();

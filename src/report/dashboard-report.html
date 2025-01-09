@@ -1,0 +1,7 @@
+<h2>{{vm.reportName}}</h2>
+<p ng-if='vm.isSupersetReport'>
+    {{ 'report.superset.auth.pageRequiresAuthorization' | message }}
+    <a href="{{vm.authUrl}}">{{ 'report.superset.auth.clickingHere' | message }}</a>
+</p>
+<iframe ng-if='isSupersetReport && vm.isReady' seamless frameBorder="0" scrolling="auto" ng-src="{{vm.reportUrl}}"></iframe>
+<iframe ng-if='!vm.isSupersetReport' seamless frameBorder="0" scrolling="auto" allowFullScreen="true" ng-src="{{vm.reportUrl}}"></iframe>

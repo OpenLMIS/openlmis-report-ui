@@ -1,6 +1,9 @@
 5.2.13-SNAPSHOT / WIP
 ==================
 
+Improvements:
+* [SELV3-783](https://openlmis.atlassian.net/browse/SELV3-783): Fetching dashboard reports from backend, displaying reports by their categories
+
 5.2.12 / 2024-10-31
 ==================
 

@@ -19,48 +19,48 @@
 
     /**
      * @ngdoc controller
-     * @name report.controller:SupersetReportController
+     * @name report.controller:DashboardReportController
      *
      * @description
-     * Controller for superset report view.
+     * Controller for dashboard report view.
      */
     angular
         .module('report')
-        .controller('SupersetReportController', SupersetReportController);
+        .controller('DashboardReportController', DashboardReportController);
 
-    SupersetReportController.inject = ['reportCode', 'reportUrl', 'loadingModalService', 'messageService',
-        'supersetLocaleService', 'SUPERSET_URL'];
+    DashboardReportController.inject = ['reportName', 'isSupersetReport', 'reportUrl', 'loadingModalService',
+        'messageService', 'supersetLocaleService', 'SUPERSET_URL'];
 
-    function SupersetReportController(reportCode, reportUrl, loadingModalService, messageService,
-                                      supersetLocaleService, SUPERSET_URL) {
+    function DashboardReportController(reportName, isSupersetReport, reportUrl, loadingModalService, messageService,
+                                       supersetLocaleService, SUPERSET_URL) {
         var vm = this;
         vm.$onInit = onInit;
 
         /**
          * @ngdoc property
-         * @propertyOf report.controller:SupersetReportController
-         * @name reportCode
+         * @propertyOf report.controller:DashboardReportController
+         * @name reportName
          * @type {string}
          *
          * @description
-         * The superset report code.
+         * The report name.
          */
-        vm.reportCode = undefined;
+        vm.reportName = undefined;
 
         /**
          * @ngdoc property
-         * @propertyOf report.controller:SupersetReportController
+         * @propertyOf report.controller:DashboardReportController
          * @name reportUrl
          * @type {string}
          *
          * @description
-         * The superset report URL.
+         * The report URL.
          */
         vm.reportUrl = undefined;
 
         /**
          * @ngdoc property
-         * @propertyOf report.controller:SupersetReportController
+         * @propertyOf report.controller:DashboardReportController
          * @name authUrl
          * @type {string}
          *
@@ -71,7 +71,7 @@
 
         /**
          * @ngdoc property
-         * @propertyOf report.controller:SupersetReportController
+         * @propertyOf report.controller:DashboardReportController
          * @name isReady
          * @type {boolean}
          *
@@ -81,11 +81,14 @@
         vm.isReady = false;
 
         function onInit() {
-            vm.reportCode = reportCode;
+            vm.reportName = reportName;
             vm.reportUrl = reportUrl;
+            vm.isSupersetReport = isSupersetReport;
             vm.authUrl = SUPERSET_URL + '/login/openlmis';
 
-            adjustSupersetLanguage();
+            if (vm.isSupersetReport) {
+                adjustSupersetLanguage();
+            }
         }
 
         function adjustSupersetLanguage() {

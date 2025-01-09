@@ -17,14 +17,41 @@
 
     'use strict';
 
+    /**
+     * @ngdoc object
+     * @name report.REPORT_TYPES
+     *
+     * @description
+     * This is constant for report types.
+     */
     angular
         .module('report')
-        .config(config);
+        .constant('REPORT_TYPES', types());
 
-    config.$inject = ['$stateProvider', 'supersetReportsProvider'];
+    function types() {
+        var REPORT_TYPES = {
+            SUPERSET: 'SUPERSET',
+            POWERBI: 'POWERBI',
+            getTypes: getTypes
+        };
+        return REPORT_TYPES;
 
-    function config($stateProvider, supersetReportsProvider) {
-        supersetReportsProvider.$get().addReporingPages($stateProvider);
+        /**
+         * @ngdoc method
+         * @methodOf report.REPORT_TYPES
+         * @name getTypes
+         *
+         * @description
+         * Returns all available report types as a list.
+         *
+         * @return  {Array} the list of available report types
+         */
+        function getTypes() {
+            return [
+                REPORT_TYPES.SUPERSET,
+                REPORT_TYPES.POWERBI
+            ];
+        }
     }
 
 })();
