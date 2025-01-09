@@ -19,65 +19,65 @@
 
     /**
      * @ngdoc object
-     * @name report.supersetReports
+     * @name report.dashboardReports
      *
      * @description
-     * This is constant defining available superset reports.
+     * This is constant defining available dashbaord reports.
      */
     angular
         .module('report')
-        .factory('supersetReports', supersetReports);
+        .factory('dashboardReports', dashboardReports);
 
-    supersetReports.$inject = ['SUPERSET_URL', 'reportDashboardService'];
+    dashboardReports.$inject = ['reportDashboardService', 'REPORT_TYPES'];
 
-    function supersetReports(SUPERSET_URL, reportDashboardService) {
-        var reports = reportDashboardService.getAll();
+    function dashboardReports(reportDashboardService, REPORT_TYPES) {
+        var reports = getReports();
 
         return {
             getReports: getReports,
-            getHomePageReport: getHomePageReport,
             addReporingPages: addReporingPages
         };
 
         function addReporingPages($stateProvider) {
-            if (angular.equals(reports, {})) {
-                // nothing to do here
-                return;
-            }
-
-            $stateProvider.state('openlmis.reports.list.superset', {
-                abstract: true,
-                url: '/superset',
-                views: {
-                    // we need the main page to flex to the window size
-                    '@': {
-                        templateUrl: 'openlmis-main-state/flex-page.html'
-                    }
+            reportDashboardService.getAllForUser().then(function(response) {
+                reports = response.content;
+                if (angular.equals(reports, {})) {
+                    // nothing to do here
+                    return;
                 }
-            });
 
-            Object.values(reports).forEach(function(report) {
-                addReporingPage($stateProvider, report);
+                $stateProvider.state('openlmis.reports.list.dashboard', {
+                    abstract: true,
+                    url: '/dashboard',
+                    views: {
+                        // we need the main page to flex to the window size
+                        '@': {
+                            templateUrl: 'openlmis-main-state/flex-page.html'
+                        }
+                    }
+                });
+
+                Object.values(reports).forEach(function(report) {
+                    addReporingPage($stateProvider, report);
+                });
             });
         }
 
         function addReporingPage($stateProvider, report) {
-            $stateProvider.state('openlmis.reports.list.superset.' + report.id, {
+            $stateProvider.state('openlmis.reports.list.dashboard.' + report.id, {
                 url: '/' + report.id,
                 label: report.name,
-                controller: 'SupersetReportController',
-                templateUrl: 'report/superset-report.html',
+                controller: 'DashboardReportController',
+                templateUrl: 'report/dashboard-report.html',
                 controllerAs: 'vm',
                 resolve: createResolve(report)
             });
         }
 
         function getReports() {
-            return reports;
-        }
-
-        function getHomePageReport() {
-            return reportDashboardService.getHomePageReport();
+            return reportDashboardService.getAllForUser().then(function(response) {
+                return response.content;
+            });
         }
 
         function createResolve(report) {
@@ -89,10 +89,10 @@
                     return report.name;
                 },
                 isSupersetReport: function() {
-                    return report.type === 'Superset';
+                    return report.type === REPORT_TYPES.SUPERSET;
                 }
             };
-            if (report.type === 'Superset') {
+            if (report.type === REPORT_TYPES.SUPERSET) {
                 resolve['authorizationInSuperset'] = authorizeInSuperset;
             }
             return resolve;
@@ -105,7 +105,7 @@
                 keyboard: false,
                 controller: 'SupersetOAuthLoginController',
                 controllerAs: 'vm',
-                templateUrl: 'report/superset-oauth-login.html',
+                templateUrl: 'openlmis-superset/superset-oauth-login.html',
                 show: true
             });
             return dialog.promise

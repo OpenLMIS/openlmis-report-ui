@@ -19,48 +19,48 @@
 
     /**
      * @ngdoc controller
-     * @name report.controller:SupersetReportController
+     * @name report.controller:DashboardReportController
      *
      * @description
-     * Controller for superset report view.
+     * Controller for dashboard report view.
      */
     angular
         .module('report')
-        .controller('SupersetReportController', SupersetReportController);
+        .controller('DashboardReportController', DashboardReportController);
 
-    SupersetReportController.inject = ['reportName', 'isSupersetReport', 'reportUrl', 'loadingModalService',
+    DashboardReportController.inject = ['reportName', 'isSupersetReport', 'reportUrl', 'loadingModalService',
         'messageService', 'supersetLocaleService', 'SUPERSET_URL'];
 
-    function SupersetReportController(reportName, isSupersetReport, reportUrl, loadingModalService, messageService,
-                                      supersetLocaleService, SUPERSET_URL) {
+    function DashboardReportController(reportName, isSupersetReport, reportUrl, loadingModalService, messageService,
+                                       supersetLocaleService, SUPERSET_URL) {
         var vm = this;
         vm.$onInit = onInit;
 
         /**
          * @ngdoc property
-         * @propertyOf report.controller:SupersetReportController
+         * @propertyOf report.controller:DashboardReportController
          * @name reportName
          * @type {string}
          *
          * @description
-         * The superset report name.
+         * The report name.
          */
         vm.reportName = undefined;
 
         /**
          * @ngdoc property
-         * @propertyOf report.controller:SupersetReportController
+         * @propertyOf report.controller:DashboardReportController
          * @name reportUrl
          * @type {string}
          *
          * @description
-         * The superset report URL.
+         * The report URL.
          */
         vm.reportUrl = undefined;
 
         /**
          * @ngdoc property
-         * @propertyOf report.controller:SupersetReportController
+         * @propertyOf report.controller:DashboardReportController
          * @name authUrl
          * @type {string}
          *
@@ -71,7 +71,7 @@
 
         /**
          * @ngdoc property
-         * @propertyOf report.controller:SupersetReportController
+         * @propertyOf report.controller:DashboardReportController
          * @name isReady
          * @type {boolean}
          *

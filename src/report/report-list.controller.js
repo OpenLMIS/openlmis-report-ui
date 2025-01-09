@@ -28,9 +28,9 @@
         .module('report')
         .controller('ReportListController', controller);
 
-    controller.$inject = ['loadingModalService', 'reportCategories', 'jasperReports', 'dashboardReports'];
+    controller.$inject = ['loadingModalService', 'reportCategories', 'jasperReports', 'dashboardReportsList'];
 
-    function controller(loadingModalService, reportCategories, jasperReports, dashboardReports) {
+    function controller(loadingModalService, reportCategories, jasperReports, dashboardReportsList) {
         var vm = this;
         vm.result = {};
         vm.$onInit = onInit;
@@ -66,7 +66,7 @@
          * @description
          * The list of all available dashboard Reports.
          */
-        vm.dashboardReports = dashboardReports;
+        vm.dashboardReportsList = dashboardReportsList;
 
         function onInit() {
             loadingModalService.open();
@@ -79,16 +79,19 @@
             });
 
             vm.jasperReports.forEach(function(element) {
-                // usunac po połączeniu z be
-                element['category'] = {
-                    name: 'Stock'
-                };
                 element['uisref'] = '.generate({module: report.$module, report: report.id})';
+                // remove after adding category to BE
+                if (!element.category) {
+                    element['category'] = {
+                        name: 'Default Category'
+                    };
+                }
+                // ends here
                 vm.result[element.category.name].push(element);
             });
 
-            vm.dashboardReports.forEach(function(element) {
-                element['uisref'] = 'openlmis.reports.list.superset.' + element.id;
+            vm.dashboardReportsList.forEach(function(element) {
+                element['uisref'] = 'openlmis.reports.list.dashboard.' + element.id;
                 vm.result[element.category.name].push(element);
             });
 

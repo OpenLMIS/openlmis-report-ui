@@ -22,13 +22,14 @@ describe('openlmis.reports.list state', function() {
             this.$state = $injector.get('$state');
             this.$rootScope = $injector.get('$rootScope');
             this.$q = $injector.get('$q');
-            this.permissionService = $injector.get('permissionService');
             this.reportFactory = $injector.get('reportFactory');
+            this.reportCategoryService = $injector.get('reportCategoryService');
+            this.dashboardReports = $injector.get('dashboardReports');
             this.$location = $injector.get('$location');
             this.REPORT_RIGHTS = $injector.get('REPORT_RIGHTS');
         });
 
-        this.reports = [
+        this.jasperReports = [
             {
                 id: 'id-one',
                 name: 'Report 1',
@@ -41,25 +42,37 @@ describe('openlmis.reports.list state', function() {
             }
         ];
 
-        this.permissions = {
-            REPORTS_VIEW: false,
-            REPORT_TEMPLATES_EDIT: false,
-            REPORTING_RATE_AND_TIMELINESS_REPORT_VIEW: true,
-            STOCK_STATUS_REPORT_VIEW: false,
-            STOCKOUTS_REPORT_VIEW: false,
-            CONSUMPTION_REPORT_VIEW: false,
-            ORDERS_REPORT_VIEW: false,
-            ADJUSTMENTS_REPORT_VIEW: false,
-            ADMINISTRATIVE_REPORT_VIEW: false
+        this.reportCategories = {
+            content: [
+                {
+                    name: 'Administartion'
+                },
+                {
+                    name: 'Orders'
+                }
+            ]
         };
 
-        var $q = this.$q;
-        var REPORT_RIGHTS = this.REPORT_RIGHTS;
+        this.dashboardReportsList = [
+            {
+                id: 'id-three',
+                name: 'Report 3',
+                category: {
+                    name: 'Administartion'
+                }
+            },
+            {
+                id: 'id-four',
+                name: 'Report 4',
+                category: {
+                    name: 'Orders'
+                }
+            }
+        ];
 
-        spyOn(this.reportFactory, 'getAllReports').andReturn(this.$q.resolve(this.reports));
-        spyOn(this.permissionService, 'hasRoleWithRight').andCallFake(function(right) {
-            return $q.resolve(right === REPORT_RIGHTS.REPORTING_RATE_AND_TIMELINESS_REPORT_VIEW);
-        });
+        spyOn(this.reportFactory, 'getAllReports').andReturn(this.$q.resolve(this.jasperReports));
+        spyOn(this.reportCategoryService, 'getAll').andReturn(this.$q.resolve(this.reportCategories));
+        spyOn(this.dashboardReports, 'getReports').andReturn(this.$q.resolve(this.dashboardReportsList));
 
         this.goToUrl = goToUrl;
         this.getResolvedValue = getResolvedValue;
@@ -78,13 +91,9 @@ describe('openlmis.reports.list state', function() {
     it('should fetch reports', function() {
         this.goToUrl('/reports/list');
 
-        expect(this.getResolvedValue('reports')).toEqual(this.reports);
-    });
-
-    it('should fetch permissions', function() {
-        this.goToUrl('/reports/list');
-
-        expect(this.getResolvedValue('permissions')).toEqual(this.permissions);
+        expect(this.getResolvedValue('jasperReports')).toEqual(this.jasperReports);
+        expect(this.getResolvedValue('reportCategories')).toEqual(this.reportCategories.content);
+        expect(this.getResolvedValue('dashboardReportsList')).toEqual(this.dashboardReportsList);
     });
 
     function goToUrl(url) {

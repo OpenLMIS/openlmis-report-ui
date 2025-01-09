@@ -18,66 +18,67 @@ describe('ReportListController', function() {
     beforeEach(function() {
         module('report');
 
-        this.reports = [
+        this.jasperReports = [
             {
                 id: 'id-one',
                 name: 'Report 1',
-                $module: 'moduleOne'
+                category: {
+                    name: 'Administartion'
+                }
             },
             {
                 id: 'id-two',
                 name: 'Report 2',
-                $module: 'moduleTwo'
+                category: {
+                    name: 'Orders'
+                }
             }
         ];
 
-        this.permissions = {
-            REPORTS_VIEW: false,
-            REPORTING_RATE_AND_TIMELINESS_REPORT_VIEW: true,
-            STOCK_STATUS_REPORT_VIEW: false,
-            STOCKOUTS_REPORT_VIEW: false,
-            CONSUMPTION_REPORT_VIEW: false,
-            ORDERS_REPORT_VIEW: false,
-            ADJUSTMENTS_REPORT_VIEW: false,
-            ADMINISTRATIVE_REPORT_VIEW: false
-        };
+        this.reportCategories = [
+            {
+                name: 'Administartion'
+            },
+            {
+                name: 'Orders'
+            }
+        ];
+
+        this.dashboardReportsList = [
+            {
+                id: 'id-three',
+                name: 'Report 3',
+                category: {
+                    name: 'Administartion'
+                }
+            },
+            {
+                id: 'id-four',
+                name: 'Report 4',
+                category: {
+                    name: 'Orders'
+                }
+            }
+        ];
 
         inject(function($injector) {
             this.$controller = $injector.get('$controller');
-            this.REPORT_RIGHTS = $injector.get('REPORT_RIGHTS');
         });
 
         this.vm = this.$controller('ReportListController', {
-            reports: this.reports,
-            permissions: this.permissions
+            jasperReports: this.jasperReports,
+            reportCategories: this.reportCategories,
+            dashboardReportsList: this.dashboardReportsList
         });
+
     });
 
     it('should set report list', function() {
-        expect(this.vm.reports).toEqual(this.reports);
-    });
+        expect(this.vm.jasperReports).toEqual(this.jasperReports);
 
-    describe('hasRight', function() {
+        expect(this.vm.reportCategories).toEqual(this.reportCategories);
 
-        it('should return true if permissionService returns true', function() {
-            var result = this.vm.hasRight('REPORTING_RATE_AND_TIMELINESS_REPORT_VIEW');
-
-            expect(result).toBeTruthy();
-        });
-
-        it('should return false if permissionService returns false', function() {
-            var result = this.vm.hasRight('ADMINISTRATIVE_REPORT_VIEW');
-
-            expect(result).toBeFalsy();
-        });
-
-        it('should return true if user has REPORTS_VIEW right', function() {
-            this.vm.permissions['REPORTS_VIEW'] = true;
-            var result = this.vm.hasRight('ADMINISTRATIVE_REPORT_VIEW');
-
-            expect(result).toBeTruthy();
-        });
-
+        expect(this.vm.dashboardReportsList).toEqual(this.dashboardReportsList);
     });
 
 });

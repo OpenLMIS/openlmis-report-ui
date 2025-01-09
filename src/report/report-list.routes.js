@@ -37,13 +37,15 @@
             ],
             resolve: {
                 reportCategories: function(reportCategoryService) {
-                    return reportCategoryService.getReportCategories();
+                    return reportCategoryService.getAll().then(function(categories) {
+                        return categories.content;
+                    });
                 },
                 jasperReports: function(reportFactory) {
                     return reportFactory.getAllReports();
                 },
-                dashboardReports: function(supersetReports) {
-                    return supersetReports.getReports();
+                dashboardReportsList: function(dashboardReports) {
+                    return dashboardReports.getReports();
                 }
             }
         });
