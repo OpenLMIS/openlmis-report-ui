@@ -44,8 +44,11 @@
                 jasperReports: function(reportFactory) {
                     return reportFactory.getAllReports();
                 },
-                dashboardReportsList: function(dashboardReports) {
-                    return dashboardReports.getReports();
+                dashboardReportsList: function(dashboardReports, reportDashboardService) {
+                    return reportDashboardService.getAllForUser().then(function(response) {
+                        dashboardReports.addReporingPages($stateProvider);
+                        return response.content;
+                    });
                 }
             }
         });

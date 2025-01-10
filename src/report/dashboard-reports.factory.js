@@ -31,7 +31,7 @@
     dashboardReports.$inject = ['reportDashboardService', 'REPORT_TYPES'];
 
     function dashboardReports(reportDashboardService, REPORT_TYPES) {
-        var reports = getReports();
+        var reports = undefined;
 
         return {
             getReports: getReports,
@@ -83,7 +83,7 @@
         function createResolve(report) {
             var resolve = {
                 reportUrl: function($sce) {
-                    return $sce.trustAsResourceUrl(report.url);
+                    return $sce.trustAsResourceUrl(report.url + '?standalone=true');
                 },
                 reportName: function() {
                     return report.name;

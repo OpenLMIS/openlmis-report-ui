@@ -24,6 +24,7 @@ describe('openlmis.reports.list state', function() {
             this.$q = $injector.get('$q');
             this.reportFactory = $injector.get('reportFactory');
             this.reportCategoryService = $injector.get('reportCategoryService');
+            this.reportDashboardService = $injector.get('reportDashboardService');
             this.dashboardReports = $injector.get('dashboardReports');
             this.$location = $injector.get('$location');
             this.REPORT_RIGHTS = $injector.get('REPORT_RIGHTS');
@@ -53,26 +54,29 @@ describe('openlmis.reports.list state', function() {
             ]
         };
 
-        this.dashboardReportsList = [
-            {
-                id: 'id-three',
-                name: 'Report 3',
-                category: {
-                    name: 'Administartion'
+        this.dashboardReportsList = {
+            content: [
+                {
+                    id: 'id-three',
+                    name: 'Report 3',
+                    category: {
+                        name: 'Administartion'
+                    }
+                },
+                {
+                    id: 'id-four',
+                    name: 'Report 4',
+                    category: {
+                        name: 'Orders'
+                    }
                 }
-            },
-            {
-                id: 'id-four',
-                name: 'Report 4',
-                category: {
-                    name: 'Orders'
-                }
-            }
-        ];
+            ]
+        };
 
         spyOn(this.reportFactory, 'getAllReports').andReturn(this.$q.resolve(this.jasperReports));
         spyOn(this.reportCategoryService, 'getAll').andReturn(this.$q.resolve(this.reportCategories));
-        spyOn(this.dashboardReports, 'getReports').andReturn(this.$q.resolve(this.dashboardReportsList));
+        spyOn(this.reportDashboardService, 'getAllForUser').andReturn(this.$q.resolve(this.dashboardReportsList));
+        spyOn(this.dashboardReports, 'addReporingPages').andReturn(true);
 
         this.goToUrl = goToUrl;
         this.getResolvedValue = getResolvedValue;
@@ -93,7 +97,7 @@ describe('openlmis.reports.list state', function() {
 
         expect(this.getResolvedValue('jasperReports')).toEqual(this.jasperReports);
         expect(this.getResolvedValue('reportCategories')).toEqual(this.reportCategories.content);
-        expect(this.getResolvedValue('dashboardReportsList')).toEqual(this.dashboardReportsList);
+        expect(this.getResolvedValue('dashboardReportsList')).toEqual(this.dashboardReportsList.content);
     });
 
     function goToUrl(url) {
