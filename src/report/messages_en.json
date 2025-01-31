@@ -13,6 +13,9 @@
     "report.reports": "Reports",
     "report.viewReports": "View Reports",
     "report.xls": "XLS",
+    "report.xlsx": "XLSX",
+    "report.boolean.true": "Yes",
+    "report.boolean.false": "No",
     "report.superset.auth.pageRequiresAuthorization": "This page requires authorization in the reporting stack. If nothing shows up, you still can authorize manually by",
     "report.superset.auth.clickingHere": "clicking here"
 }
