@@ -83,7 +83,10 @@
         function createResolve(report) {
             var resolve = {
                 reportUrl: function($sce) {
-                    return $sce.trustAsResourceUrl(report.url + '?standalone=true');
+                    if (report.type === REPORT_TYPES.SUPERSET) {
+                        return $sce.trustAsResourceUrl(report.url + '?standalone=true');
+                    }
+                    return $sce.trustAsResourceUrl(report.url);
                 },
                 reportName: function() {
                     return report.name;

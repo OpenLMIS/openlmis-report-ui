@@ -1,6 +1,9 @@
 5.2.14-SNAPSHOT / WIP
 ==================
 
+Bug fixes:
+* [OLMIS-8099](https://openlmis.atlassian.net/browse/OLMIS-8099): Changed report url only for Superset reports, added requisitions reporting_service
+
 5.2.13 / 2025-01-13
 ==================
 
