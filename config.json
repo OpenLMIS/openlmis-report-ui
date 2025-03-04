@@ -5,7 +5,7 @@
         "/openlmis-ui-layout",
         "/openlmis-referencedata-ui"
     ],
-    "REPORTING_SERVICES": "common",
+    "REPORTING_SERVICES": "common,requisitions",
     "SUPERSET_URL": "https://superset-uat.openlmis.org"
 }
 
