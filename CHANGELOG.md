@@ -1,6 +1,10 @@
 Upcoming Version (WIP)
 ==================
 
+Improvements:
+* [ODRC-24](https://openlmis.atlassian.net/browse/ODRC-24) Attach language parameter to report request
+
+
 5.2.15 / 2025-11-27
 ==================
 

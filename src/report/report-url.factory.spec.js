@@ -30,6 +30,16 @@ describe('reportUrlFactory', function() {
                     return url;
                 };
             });
+            $provide.factory('localStorageService', function() {
+                return {
+                    get: function(key) {
+                        if (key === 'current_locale') {
+                            return 'en';
+                        }
+                        return null;
+                    }
+                };
+            });
         });
 
         report = {
@@ -70,7 +80,8 @@ describe('reportUrlFactory', function() {
     it('should format urls with selected values', function() {
         var url = reportUrlFactory.buildUrl('/some', report, selectedValues, format);
 
-        expect(url).toBe('/api/reports/templates/some/reportId/pdf?program=programName&&facility=facilityCode&&');
+        expect(url).toBe('/api/reports/templates/some/reportId/pdf?program=programName&&'
+            + 'facility=facilityCode&&lang=en&&');
     });
 
 });
