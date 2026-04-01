@@ -19,8 +19,10 @@ describe('DashboardReportController', function() {
 
     beforeEach(function() {
         that.SUPERSET_URL = 'http://localhost/superset';
-        that.reportUrl = that.SUPERSET_URL + '/theReport';
+        that.reportName = 'Test Report';
+        that.reportUrl = null;
         that.isSupersetReport = true;
+        that.embeddedUuid = 'test-embedded-uuid-1234';
 
         module('report', function($provide) {
             $provide.constant('SUPERSET_URL', that.SUPERSET_URL);
@@ -30,16 +32,25 @@ describe('DashboardReportController', function() {
             that.$controller = $injector.get('$controller');
             that.$q = $injector.get('$q');
             that.$rootScope = $injector.get('$rootScope');
-
-            that.supersetLocaleService = $injector.get('supersetLocaleService');
+            that.$scope = that.$rootScope.$new();
+            that.$http = $injector.get('$http');
+            that.openlmisUrlFactory = $injector.get('openlmisUrlFactory');
         });
 
-        spyOn(that.supersetLocaleService, 'changeLocale').andReturn(that.$q.resolve());
+        // Mock $element with a querySelector that returns null (no DOM in unit tests)
+        that.$element = [{
+            querySelector: function() {
+                return null;
+            }
+        }];
 
         that.vm = that.$controller('DashboardReportController', {
             reportName: that.reportName,
             reportUrl: that.reportUrl,
-            isSupersetReport: that.isSupersetReport
+            isSupersetReport: that.isSupersetReport,
+            embeddedUuid: that.embeddedUuid,
+            $element: that.$element,
+            $scope: that.$scope
         });
     });
 
@@ -47,10 +58,6 @@ describe('DashboardReportController', function() {
 
         beforeEach(function() {
             that.vm.$onInit();
-        });
-
-        it('should expose dashboard iFrame src', function() {
-            expect(that.vm.reportUrl).toEqual(that.reportUrl);
         });
 
         it('should expose isSupersetReport flag', function() {
@@ -61,19 +68,156 @@ describe('DashboardReportController', function() {
             expect(that.vm.reportName).toEqual(that.reportName);
         });
 
-        it('should expose authUrl', function() {
-            expect(that.vm.authUrl).not.toBeUndefined();
+        it('should expose reportUrl as null for Superset reports', function() {
+            expect(that.vm.reportUrl).toBeNull();
         });
 
-        it('should expose isReady', function() {
-            expect(that.vm.isReady).toEqual(false);
+        it('should not show error when embeddedUuid is provided', function() {
+            expect(that.vm.error).toBeUndefined();
+        });
+    });
+
+    describe('onInit without embeddedUuid', function() {
+
+        beforeEach(function() {
+            that.vm = that.$controller('DashboardReportController', {
+                reportName: that.reportName,
+                reportUrl: that.reportUrl,
+                isSupersetReport: true,
+                embeddedUuid: null,
+                $element: that.$element,
+                $scope: that.$scope
+            });
+            that.vm.$onInit();
         });
 
-        it('should adjust language in Superset and change isReady flag', function() {
-            that.$rootScope.$apply();
+        it('should show error when embeddedUuid is missing', function() {
+            expect(that.vm.error).toEqual('This dashboard has no embedded UUID configured.');
+        });
+    });
 
-            expect(that.supersetLocaleService.changeLocale).toHaveBeenCalled();
-            expect(that.vm.isReady).toBe(true);
+    describe('onInit for non-Superset report', function() {
+
+        beforeEach(function() {
+            that.vm = that.$controller('DashboardReportController', {
+                reportName: 'Jasper Report',
+                reportUrl: 'http://example.com/report',
+                isSupersetReport: false,
+                embeddedUuid: null,
+                $element: that.$element,
+                $scope: that.$scope
+            });
+            that.vm.$onInit();
+        });
+
+        it('should expose reportUrl for non-Superset reports', function() {
+            expect(that.vm.reportUrl).toEqual('http://example.com/report');
+        });
+
+        it('should not set isSupersetReport', function() {
+            expect(that.vm.isSupersetReport).toEqual(false);
+        });
+
+        it('should not show error', function() {
+            expect(that.vm.error).toBeUndefined();
+        });
+    });
+
+    describe('SDK loading', function() {
+
+        var $httpBackend, sdkUrl, savedSdk;
+
+        beforeEach(function() {
+            inject(function($injector) {
+                $httpBackend = $injector.get('$httpBackend');
+            });
+
+            sdkUrl = that.SUPERSET_URL + '/static/superset-embedded-sdk.js';
+
+            savedSdk = window.supersetEmbeddedSdk;
+            window.supersetEmbeddedSdk = undefined;
+
+            that.$element = [{
+                querySelector: function() {
+                    return document.createElement('div');
+                }
+            }];
+        });
+
+        afterEach(function() {
+            window.supersetEmbeddedSdk = savedSdk;
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
+        });
+
+        it('should load SDK via $http and set it on window', function() {
+            var scriptBody =
+                'window.supersetEmbeddedSdk = {' +
+                '  embedDashboard: function() {' +
+                '    return Promise.resolve();' +
+                '  }' +
+                '};';
+            $httpBackend.expectGET(sdkUrl).respond(200, scriptBody);
+
+            var vm = that.$controller('DashboardReportController', {
+                reportName: that.reportName,
+                reportUrl: that.reportUrl,
+                isSupersetReport: true,
+                embeddedUuid: 'test-uuid',
+                $element: that.$element,
+                $scope: that.$scope
+            });
+
+            vm.$onInit();
+            $httpBackend.flush();
+            that.$rootScope.$digest();
+
+            expect(window.supersetEmbeddedSdk).toBeDefined();
+            expect(window.supersetEmbeddedSdk.embedDashboard)
+                .toBeDefined();
+        });
+
+        it('should set error when SDK load fails', function() {
+            $httpBackend.expectGET(sdkUrl).respond(500, 'Server Error');
+
+            var vm = that.$controller('DashboardReportController', {
+                reportName: that.reportName,
+                reportUrl: that.reportUrl,
+                isSupersetReport: true,
+                embeddedUuid: 'test-uuid',
+                $element: that.$element,
+                $scope: that.$scope
+            });
+
+            vm.$onInit();
+            $httpBackend.flush();
+            that.$rootScope.$digest();
+
+            expect(vm.error).toContain('Failed to load Superset SDK');
+        });
+
+        it('should not make HTTP request when SDK is cached', function() {
+            window.supersetEmbeddedSdk = {
+                embedDashboard: function() {
+                    return that.$q.resolve({});
+                }
+            };
+
+            var vm = that.$controller('DashboardReportController', {
+                reportName: that.reportName,
+                reportUrl: that.reportUrl,
+                isSupersetReport: true,
+                embeddedUuid: 'test-uuid',
+                $element: that.$element,
+                $scope: that.$scope
+            });
+
+            vm.$onInit();
+            that.$rootScope.$digest();
+
+            // No $httpBackend requests expected — verifyNoOutstanding
+            // in afterEach confirms no HTTP was made
+            expect(vm.error).toBeUndefined();
         });
     });
 });

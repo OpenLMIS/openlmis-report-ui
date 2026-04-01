@@ -81,10 +81,11 @@
         }
 
         function createResolve(report) {
-            var resolve = {
+            const resolve = {
                 reportUrl: function($sce) {
+                    // Superset reports use embedded SDK, not iframe URL
                     if (report.type === REPORT_TYPES.SUPERSET) {
-                        return $sce.trustAsResourceUrl(report.url + '?standalone=true');
+                        return null;
                     }
                     return $sce.trustAsResourceUrl(report.url);
                 },
@@ -93,32 +94,12 @@
                 },
                 isSupersetReport: function() {
                     return report.type === REPORT_TYPES.SUPERSET;
+                },
+                embeddedUuid: function() {
+                    return report.type === REPORT_TYPES.SUPERSET ? report.embeddedUuid : null;
                 }
             };
-            if (report.type === REPORT_TYPES.SUPERSET) {
-                resolve['authorizationInSuperset'] = authorizeInSuperset;
-            }
             return resolve;
-        }
-
-        function authorizeInSuperset(loadingModalService, openlmisModalService, $q, $state, MODAL_CANCELLED) {
-            loadingModalService.close();
-            var dialog = openlmisModalService.createDialog({
-                backdrop: 'static',
-                keyboard: false,
-                controller: 'SupersetOAuthLoginController',
-                controllerAs: 'vm',
-                templateUrl: 'openlmis-superset/superset-oauth-login.html',
-                show: true
-            });
-            return dialog.promise
-                .catch(function(reason) {
-                    if (reason === MODAL_CANCELLED) {
-                        $state.go('openlmis.reports.list');
-                        return $q.resolve();
-                    }
-                    return $q.reject();
-                });
         }
     }
 

@@ -33,7 +33,6 @@
         'openlmis-permissions',
         'openlmis-main-state',
         'ui.router',
-        'openlmis-superset',
         'report-category',
         'report-dashboard'
     ]);

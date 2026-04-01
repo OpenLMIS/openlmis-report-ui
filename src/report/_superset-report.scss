@@ -1,3 +1,15 @@
 iframe {
     flex: 1 0 auto;
 }
+
+.superset-embed-container {
+    width: 100%;
+    height: calc(100vh - 200px);
+    min-height: 600px;
+}
+
+.superset-embed-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
