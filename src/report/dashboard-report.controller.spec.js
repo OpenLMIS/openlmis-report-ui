@@ -15,7 +15,7 @@
 
 describe('DashboardReportController', function() {
 
-    var that = this;
+    const that = this;
 
     beforeEach(function() {
         that.SUPERSET_URL = 'http://localhost/superset';
@@ -125,7 +125,7 @@ describe('DashboardReportController', function() {
 
     describe('SDK loading', function() {
 
-        var $httpBackend, sdkUrl, savedSdk;
+        let $httpBackend, sdkUrl, savedSdk;
 
         beforeEach(function() {
             inject(function($injector) {
@@ -151,7 +151,7 @@ describe('DashboardReportController', function() {
         });
 
         it('should load SDK via $http and set it on window', function() {
-            var scriptBody =
+            const scriptBody =
                 'window.supersetEmbeddedSdk = {' +
                 '  embedDashboard: function() {' +
                 '    return Promise.resolve();' +
@@ -159,7 +159,7 @@ describe('DashboardReportController', function() {
                 '};';
             $httpBackend.expectGET(sdkUrl).respond(200, scriptBody);
 
-            var vm = that.$controller('DashboardReportController', {
+            const vm = that.$controller('DashboardReportController', {
                 reportName: that.reportName,
                 reportUrl: that.reportUrl,
                 isSupersetReport: true,
@@ -180,7 +180,7 @@ describe('DashboardReportController', function() {
         it('should set error when SDK load fails', function() {
             $httpBackend.expectGET(sdkUrl).respond(500, 'Server Error');
 
-            var vm = that.$controller('DashboardReportController', {
+            const vm = that.$controller('DashboardReportController', {
                 reportName: that.reportName,
                 reportUrl: that.reportUrl,
                 isSupersetReport: true,
@@ -203,7 +203,7 @@ describe('DashboardReportController', function() {
                 }
             };
 
-            var vm = that.$controller('DashboardReportController', {
+            const vm = that.$controller('DashboardReportController', {
                 reportName: that.reportName,
                 reportUrl: that.reportUrl,
                 isSupersetReport: true,
