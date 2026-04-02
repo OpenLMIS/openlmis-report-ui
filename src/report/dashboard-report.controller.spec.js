@@ -35,7 +35,11 @@ describe('DashboardReportController', function() {
             that.$scope = that.$rootScope.$new();
             that.$http = $injector.get('$http');
             that.openlmisUrlFactory = $injector.get('openlmisUrlFactory');
+
+            that.supersetLocaleService = $injector.get('supersetLocaleService');
         });
+
+        spyOn(that.supersetLocaleService, 'changeLocale').andReturn(that.$q.resolve());
 
         // Mock $element with a querySelector that returns null (no DOM in unit tests)
         that.$element = [{
@@ -54,7 +58,7 @@ describe('DashboardReportController', function() {
         });
     });
 
-    describe('onInit', function() {
+    describe('onInit with embeddedUuid', function() {
 
         beforeEach(function() {
             that.vm.$onInit();
@@ -68,21 +72,29 @@ describe('DashboardReportController', function() {
             expect(that.vm.reportName).toEqual(that.reportName);
         });
 
-        it('should expose reportUrl as null for Superset reports', function() {
+        it('should expose reportUrl as null for embedded Superset reports', function() {
             expect(that.vm.reportUrl).toBeNull();
         });
 
         it('should not show error when embeddedUuid is provided', function() {
             expect(that.vm.error).toBeUndefined();
         });
+
+        it('should not set authUrl for embedded path', function() {
+            expect(that.vm.authUrl).toBeUndefined();
+        });
+
+        it('should not call supersetLocaleService', function() {
+            expect(that.supersetLocaleService.changeLocale).not.toHaveBeenCalled();
+        });
     });
 
-    describe('onInit without embeddedUuid', function() {
+    describe('onInit without embeddedUuid (OAuth fallback)', function() {
 
         beforeEach(function() {
             that.vm = that.$controller('DashboardReportController', {
                 reportName: that.reportName,
-                reportUrl: that.reportUrl,
+                reportUrl: that.SUPERSET_URL + '/superset/dashboard/1/?standalone=true',
                 isSupersetReport: true,
                 embeddedUuid: null,
                 $element: that.$element,
@@ -91,8 +103,22 @@ describe('DashboardReportController', function() {
             that.vm.$onInit();
         });
 
-        it('should show error when embeddedUuid is missing', function() {
-            expect(that.vm.error).toEqual('This dashboard has no embedded UUID configured.');
+        it('should set authUrl for OAuth login', function() {
+            expect(that.vm.authUrl).toEqual(that.SUPERSET_URL + '/login/openlmis');
+        });
+
+        it('should call supersetLocaleService to adjust language', function() {
+            expect(that.supersetLocaleService.changeLocale).toHaveBeenCalled();
+        });
+
+        it('should set isReady after locale adjustment', function() {
+            that.$rootScope.$apply();
+
+            expect(that.vm.isReady).toBe(true);
+        });
+
+        it('should not show error', function() {
+            expect(that.vm.error).toBeUndefined();
         });
     });
 
@@ -120,6 +146,10 @@ describe('DashboardReportController', function() {
 
         it('should not show error', function() {
             expect(that.vm.error).toBeUndefined();
+        });
+
+        it('should not set authUrl', function() {
+            expect(that.vm.authUrl).toBeUndefined();
         });
     });
 

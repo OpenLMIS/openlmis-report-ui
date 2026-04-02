@@ -22,19 +22,23 @@
      * @name report.controller:DashboardReportController
      *
      * @description
-     * Controller for dashboard report view. For Superset reports, uses the
-     * Superset Embedded SDK to render the dashboard via a guest token.
+     * Controller for dashboard report view. For Superset reports with an embedded UUID,
+     * uses the Superset Embedded SDK to render the dashboard via a guest token.
+     * For Superset reports without an embedded UUID, falls back to the legacy
+     * OAuth iframe approach.
      */
     angular
         .module('report')
         .controller('DashboardReportController', DashboardReportController);
 
     DashboardReportController.$inject = ['reportName', 'isSupersetReport', 'reportUrl',
-        'embeddedUuid', '$http', '$q', '$element', '$scope', 'SUPERSET_URL', 'openlmisUrlFactory'];
+        'embeddedUuid', '$http', '$q', '$element', '$scope', 'SUPERSET_URL', 'openlmisUrlFactory',
+        'loadingModalService', 'messageService', 'supersetLocaleService'];
 
     function DashboardReportController(reportName, isSupersetReport, reportUrl,
                                        embeddedUuid, $http, $q, $element, $scope, SUPERSET_URL,
-                                       openlmisUrlFactory) {
+                                       openlmisUrlFactory, loadingModalService, messageService,
+                                       supersetLocaleService) {
         var vm = this;
         vm.$onInit = onInit;
 
@@ -56,7 +60,7 @@
          * @type {string}
          *
          * @description
-         * The report URL (used for non-Superset reports).
+         * The report URL (used for non-Superset reports and legacy OAuth iframe).
          */
         vm.reportUrl = undefined;
 
@@ -67,9 +71,20 @@
          * @type {boolean}
          *
          * @description
-         * Whether this is a Superset embedded report.
+         * Whether this is a Superset report.
          */
         vm.isSupersetReport = false;
+
+        /**
+         * @ngdoc property
+         * @propertyOf report.controller:DashboardReportController
+         * @name authUrl
+         * @type {string}
+         *
+         * @description
+         * The Superset OAuth authorization URL (legacy iframe path only).
+         */
+        vm.authUrl = undefined;
 
         /**
          * @ngdoc property
@@ -78,7 +93,7 @@
          * @type {boolean}
          *
          * @description
-         * Indicates if the Superset embedded dashboard has been initialized.
+         * Indicates if the dashboard has been initialized and is ready to display.
          */
         vm.isReady = false;
 
@@ -101,8 +116,22 @@
             if (vm.isSupersetReport && embeddedUuid) {
                 initSupersetEmbed();
             } else if (vm.isSupersetReport) {
-                vm.error = 'This dashboard has no embedded UUID configured.';
+                vm.authUrl = SUPERSET_URL + '/login/openlmis';
+                adjustSupersetLanguage();
             }
+        }
+
+        function adjustSupersetLanguage() {
+            loadingModalService.open();
+
+            var locale = messageService.getCurrentLocale();
+            supersetLocaleService.changeLocale(locale)
+                .then(function() {
+                    vm.isReady = true;
+                })
+                .finally(function() {
+                    loadingModalService.close();
+                });
         }
 
         function initSupersetEmbed() {
