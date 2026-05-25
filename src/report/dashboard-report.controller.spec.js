@@ -223,7 +223,7 @@ describe('DashboardReportController', function() {
             $httpBackend.flush();
             that.$rootScope.$digest();
 
-            expect(vm.error).toContain('Failed to load Superset SDK');
+            expect(vm.error).toContain('report.superset.sdk.failed');
         });
 
         it('should not make HTTP request when SDK is cached', function() {

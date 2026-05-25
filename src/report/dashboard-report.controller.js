@@ -138,7 +138,7 @@
             loadSupersetSdk().then(function(sdk) {
                 const container = $element[0].querySelector('#superset-embed-container');
                 if (!container) {
-                    vm.error = 'Embed container not found.';
+                    vm.error = messageService.get('report.superset.embed.containerNotFound');
                     $scope.$applyAsync();
                     return;
                 }
@@ -161,12 +161,16 @@
                     $scope.$applyAsync();
                 })
                     .catch(function(err) {
-                        vm.error = 'Failed to embed dashboard: ' + err.message;
+                        vm.error = messageService.get('report.superset.embed.failed', {
+                            error: err.message
+                        });
                         $scope.$applyAsync();
                     });
             })
                 .catch(function(err) {
-                    vm.error = 'Failed to load Superset SDK: ' + err.message;
+                    vm.error = messageService.get('report.superset.sdk.failed', {
+                        error: err.message
+                    });
                     $scope.$applyAsync();
                 });
         }
