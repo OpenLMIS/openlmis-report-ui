@@ -84,6 +84,9 @@
             var resolve = {
                 reportUrl: function($sce) {
                     if (report.type === REPORT_TYPES.SUPERSET) {
+                        if (report.embeddedUuid) {
+                            return null;
+                        }
                         return $sce.trustAsResourceUrl(report.url + '?standalone=true');
                     }
                     return $sce.trustAsResourceUrl(report.url);
@@ -93,15 +96,19 @@
                 },
                 isSupersetReport: function() {
                     return report.type === REPORT_TYPES.SUPERSET;
+                },
+                embeddedUuid: function() {
+                    return report.type === REPORT_TYPES.SUPERSET ? report.embeddedUuid : null;
                 }
             };
-            if (report.type === REPORT_TYPES.SUPERSET) {
+            if (report.type === REPORT_TYPES.SUPERSET && !report.embeddedUuid) {
                 resolve['authorizationInSuperset'] = authorizeInSuperset;
             }
             return resolve;
         }
 
-        function authorizeInSuperset(loadingModalService, openlmisModalService, $q, $state, MODAL_CANCELLED) {
+        function authorizeInSuperset(loadingModalService, openlmisModalService, $q, $state,
+                                     MODAL_CANCELLED) {
             loadingModalService.close();
             var dialog = openlmisModalService.createDialog({
                 backdrop: 'static',

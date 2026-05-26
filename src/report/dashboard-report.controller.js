@@ -22,17 +22,23 @@
      * @name report.controller:DashboardReportController
      *
      * @description
-     * Controller for dashboard report view.
+     * Controller for dashboard report view. For Superset reports with an embedded UUID,
+     * uses the Superset Embedded SDK to render the dashboard via a guest token.
+     * For Superset reports without an embedded UUID, falls back to the legacy
+     * OAuth iframe approach.
      */
     angular
         .module('report')
         .controller('DashboardReportController', DashboardReportController);
 
-    DashboardReportController.inject = ['reportName', 'isSupersetReport', 'reportUrl', 'loadingModalService',
-        'messageService', 'supersetLocaleService', 'SUPERSET_URL'];
+    DashboardReportController.$inject = ['reportName', 'isSupersetReport', 'reportUrl',
+        'embeddedUuid', '$http', '$q', '$element', '$scope', 'SUPERSET_URL', 'openlmisUrlFactory',
+        'loadingModalService', 'messageService', 'supersetLocaleService'];
 
-    function DashboardReportController(reportName, isSupersetReport, reportUrl, loadingModalService, messageService,
-                                       supersetLocaleService, SUPERSET_URL) {
+    function DashboardReportController(reportName, isSupersetReport, reportUrl,
+                                       embeddedUuid, $http, $q, $element, $scope, SUPERSET_URL,
+                                       openlmisUrlFactory, loadingModalService, messageService,
+                                       supersetLocaleService) {
         var vm = this;
         vm.$onInit = onInit;
 
@@ -54,9 +60,20 @@
          * @type {string}
          *
          * @description
-         * The report URL.
+         * The report URL (used for non-Superset reports and legacy OAuth iframe).
          */
         vm.reportUrl = undefined;
+
+        /**
+         * @ngdoc property
+         * @propertyOf report.controller:DashboardReportController
+         * @name isSupersetReport
+         * @type {boolean}
+         *
+         * @description
+         * Whether this is a Superset report.
+         */
+        vm.isSupersetReport = false;
 
         /**
          * @ngdoc property
@@ -65,7 +82,7 @@
          * @type {string}
          *
          * @description
-         * The superset authorization URL.
+         * The Superset OAuth authorization URL (legacy iframe path only).
          */
         vm.authUrl = undefined;
 
@@ -76,17 +93,30 @@
          * @type {boolean}
          *
          * @description
-         * Indicates if the controller is ready for displaying the Superset iframe.
+         * Indicates if the dashboard has been initialized and is ready to display.
          */
         vm.isReady = false;
+
+        /**
+         * @ngdoc property
+         * @propertyOf report.controller:DashboardReportController
+         * @name error
+         * @type {string}
+         *
+         * @description
+         * Error message to display if embedding fails.
+         */
+        vm.error = undefined;
 
         function onInit() {
             vm.reportName = reportName;
             vm.reportUrl = reportUrl;
             vm.isSupersetReport = isSupersetReport;
-            vm.authUrl = SUPERSET_URL + '/login/openlmis';
 
-            if (vm.isSupersetReport) {
+            if (vm.isSupersetReport && embeddedUuid) {
+                initSupersetEmbed();
+            } else if (vm.isSupersetReport) {
+                vm.authUrl = SUPERSET_URL + '/login/openlmis';
                 adjustSupersetLanguage();
             }
         }
@@ -101,6 +131,74 @@
                 })
                 .finally(function() {
                     loadingModalService.close();
+                });
+        }
+
+        function initSupersetEmbed() {
+            loadSupersetSdk().then(function(sdk) {
+                const container = $element[0].querySelector('#superset-embed-container');
+                if (!container) {
+                    vm.error = messageService.get('report.superset.embed.containerNotFound');
+                    $scope.$applyAsync();
+                    return;
+                }
+                sdk.embedDashboard({
+                    id: embeddedUuid,
+                    supersetDomain: SUPERSET_URL,
+                    mountPoint: container,
+                    fetchGuestToken: fetchGuestToken,
+                    dashboardUiConfig: {
+                        hideTitle: true,
+                        hideChartControls: false,
+                        hideTab: false,
+                        filters: {
+                            visible: true,
+                            expanded: false
+                        }
+                    }
+                }).then(function() {
+                    vm.isReady = true;
+                    $scope.$applyAsync();
+                })
+                    .catch(function(err) {
+                        vm.error = messageService.get('report.superset.embed.failed', {
+                            error: err.message
+                        });
+                        $scope.$applyAsync();
+                    });
+            })
+                .catch(function(err) {
+                    vm.error = messageService.get('report.superset.sdk.failed', {
+                        error: err.message
+                    });
+                    $scope.$applyAsync();
+                });
+        }
+
+        function loadSupersetSdk() {
+            if (window.supersetEmbeddedSdk) {
+                return $q.resolve(window.supersetEmbeddedSdk);
+            }
+            return $http.get(SUPERSET_URL + '/static/superset-embedded-sdk.js', {
+                transformResponse: function(data) {
+                    return data;
+                }
+            }).then(function(response) {
+                new Function(response.data)();
+                if (window.supersetEmbeddedSdk) {
+                    return window.supersetEmbeddedSdk;
+                }
+                throw new Error('Superset Embedded SDK failed to initialize');
+            });
+        }
+
+        function fetchGuestToken() {
+            const url = openlmisUrlFactory(
+                '/api/reports/superset/guest-token?embeddedUuid=' + embeddedUuid
+            );
+            return $http.get(url)
+                .then(function(response) {
+                    return response.data.token;
                 });
         }
     }
