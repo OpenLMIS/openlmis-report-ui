@@ -28,9 +28,9 @@
         .module('report')
         .factory('reportUrlFactory', reportUrlFactory);
 
-    reportUrlFactory.$inject = ['openlmisUrlFactory', 'pathFactory'];
+    reportUrlFactory.$inject = ['openlmisUrlFactory', 'pathFactory', 'localStorageService'];
 
-    function reportUrlFactory(openlmisUrlFactory, pathFactory) {
+    function reportUrlFactory(openlmisUrlFactory, pathFactory, localStorageService) {
         var reportUrl = '/api/reports/templates',
             factory = {
                 buildUrl: buildUrl
@@ -60,6 +60,11 @@
                 requestParameters = requestParameters + parameter.name + '=' +
                     selectedValues[parameter.name] + '&&';
             });
+
+            var locale = localStorageService.get('current_locale');
+            if (locale) {
+                requestParameters = requestParameters + 'lang=' + locale + '&&';
+            }
 
             return openlmisUrlFactory(url + '?' + requestParameters);
         }
