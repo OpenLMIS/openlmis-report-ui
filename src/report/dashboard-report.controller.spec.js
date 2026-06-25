@@ -34,6 +34,7 @@ describe('DashboardReportController', function() {
             that.$rootScope = $injector.get('$rootScope');
             that.$scope = that.$rootScope.$new();
             that.$http = $injector.get('$http');
+            that.$timeout = $injector.get('$timeout');
             that.openlmisUrlFactory = $injector.get('openlmisUrlFactory');
 
             that.supersetLocaleService = $injector.get('supersetLocaleService');
@@ -247,6 +248,43 @@ describe('DashboardReportController', function() {
 
             // No $httpBackend requests expected — verifyNoOutstanding
             // in afterEach confirms no HTTP was made
+            expect(vm.error).toBeUndefined();
+        });
+
+        it('should defer embedding to a $timeout when SDK is cached (repeat-visit fix)', function() {
+            var embedCalled = false;
+            window.supersetEmbeddedSdk = {
+                embedDashboard: function() {
+                    embedCalled = true;
+                    return that.$q.resolve({});
+                }
+            };
+            that.$element = [{
+                querySelector: function() {
+                    return document.createElement('div');
+                }
+            }];
+
+            const vm = that.$controller('DashboardReportController', {
+                reportName: that.reportName,
+                reportUrl: that.reportUrl,
+                isSupersetReport: true,
+                embeddedUuid: 'test-uuid',
+                $element: that.$element,
+                $scope: that.$scope
+            });
+
+            vm.$onInit();
+            that.$rootScope.$digest();
+
+            // With the cached SDK the embed must NOT run synchronously — it is
+            // deferred so the ng-if container has rendered. Before the fix it
+            // fired here, before the container existed ("container not found").
+            expect(embedCalled).toBe(false);
+
+            that.$timeout.flush();
+
+            expect(embedCalled).toBe(true);
             expect(vm.error).toBeUndefined();
         });
     });
