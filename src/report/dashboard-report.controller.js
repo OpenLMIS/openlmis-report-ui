@@ -32,13 +32,13 @@
         .controller('DashboardReportController', DashboardReportController);
 
     DashboardReportController.$inject = ['reportName', 'isSupersetReport', 'reportUrl',
-        'embeddedUuid', '$http', '$q', '$element', '$scope', 'SUPERSET_URL', 'openlmisUrlFactory',
-        'loadingModalService', 'messageService', 'supersetLocaleService'];
+        'embeddedUuid', '$http', '$q', '$element', '$scope', '$timeout', 'SUPERSET_URL',
+        'openlmisUrlFactory', 'loadingModalService', 'messageService', 'supersetLocaleService'];
 
     function DashboardReportController(reportName, isSupersetReport, reportUrl,
-                                       embeddedUuid, $http, $q, $element, $scope, SUPERSET_URL,
-                                       openlmisUrlFactory, loadingModalService, messageService,
-                                       supersetLocaleService) {
+                                       embeddedUuid, $http, $q, $element, $scope, $timeout,
+                                       SUPERSET_URL, openlmisUrlFactory, loadingModalService,
+                                       messageService, supersetLocaleService) {
         var vm = this;
         vm.$onInit = onInit;
 
@@ -136,36 +136,44 @@
 
         function initSupersetEmbed() {
             loadSupersetSdk().then(function(sdk) {
-                const container = $element[0].querySelector('#superset-embed-container');
-                if (!container) {
-                    vm.error = messageService.get('report.superset.embed.containerNotFound');
-                    $scope.$applyAsync();
-                    return;
-                }
-                sdk.embedDashboard({
-                    id: embeddedUuid,
-                    supersetDomain: SUPERSET_URL,
-                    mountPoint: container,
-                    fetchGuestToken: fetchGuestToken,
-                    dashboardUiConfig: {
-                        hideTitle: true,
-                        hideChartControls: false,
-                        hideTab: false,
-                        filters: {
-                            visible: true,
-                            expanded: false
-                        }
+                // The #superset-embed-container element is added by an ng-if that only
+                // resolves on a digest after $onInit. On the first visit the SDK is
+                // fetched over HTTP, which delays this callback past that render; on a
+                // repeat visit the SDK is already cached, so this resolves within the
+                // same digest — before the container exists — which previously surfaced
+                // as "Embedded container not found". Defer to $timeout so the element is
+                // present regardless of which SDK-load path ran.
+                $timeout(function() {
+                    var container = $element[0].querySelector('#superset-embed-container');
+                    if (!container) {
+                        vm.error = messageService.get('report.superset.embed.containerNotFound');
+                        return;
                     }
-                }).then(function() {
-                    vm.isReady = true;
-                    $scope.$applyAsync();
-                })
-                    .catch(function(err) {
-                        vm.error = messageService.get('report.superset.embed.failed', {
-                            error: err.message
-                        });
+                    sdk.embedDashboard({
+                        id: embeddedUuid,
+                        supersetDomain: SUPERSET_URL,
+                        mountPoint: container,
+                        fetchGuestToken: fetchGuestToken,
+                        dashboardUiConfig: {
+                            hideTitle: true,
+                            hideChartControls: false,
+                            hideTab: false,
+                            filters: {
+                                visible: true,
+                                expanded: false
+                            }
+                        }
+                    }).then(function() {
+                        vm.isReady = true;
                         $scope.$applyAsync();
-                    });
+                    })
+                        .catch(function(err) {
+                            vm.error = messageService.get('report.superset.embed.failed', {
+                                error: err.message
+                            });
+                            $scope.$applyAsync();
+                        });
+                });
             })
                 .catch(function(err) {
                     vm.error = messageService.get('report.superset.sdk.failed', {
