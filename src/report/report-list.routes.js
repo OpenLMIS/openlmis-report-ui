@@ -44,11 +44,83 @@
                 jasperReports: function(reportFactory) {
                     return reportFactory.getAllReports();
                 },
-                dashboardReportsList: function(dashboardReports, reportDashboardService) {
+                dashboardReportsList: function(reportDashboardService) {
                     return reportDashboardService.getAllForUser().then(function(response) {
-                        dashboardReports.addReporingPages($stateProvider);
                         return response.content;
                     });
+                }
+            }
+        });
+
+        // Abstract parent renders the full-page wrapper into the root ui-view; the report list
+        // has no ui-view of its own. The leaf holds the report, parameterized by id.
+        $stateProvider.state('openlmis.reports.list.dashboard', {
+            abstract: true,
+            url: '/dashboard',
+            views: {
+                '@': {
+                    templateUrl: 'openlmis-main-state/flex-page.html'
+                }
+            }
+        });
+
+        $stateProvider.state('openlmis.reports.list.dashboard.view', {
+            url: '/:reportId',
+            controller: 'DashboardReportController',
+            controllerAs: 'vm',
+            templateUrl: 'report/dashboard-report.html',
+            resolve: {
+                currentReport: function($q, $stateParams, reportDashboardService) {
+                    return reportDashboardService.getAllForUser().then(function(response) {
+                        var found = response.content.filter(function(item) {
+                            return item.id === $stateParams.reportId;
+                        })[0];
+                        return found ? found : $q.reject('Dashboard report not found');
+                    });
+                },
+                reportName: function(currentReport, $state) {
+                    // Set the state label so the breadcrumb shows the report name.
+                    $state.get('openlmis.reports.list.dashboard.view').label = currentReport.name;
+                    return currentReport.name;
+                },
+                isSupersetReport: function(currentReport, REPORT_TYPES) {
+                    return currentReport.type === REPORT_TYPES.SUPERSET;
+                },
+                reportUrl: function(currentReport, REPORT_TYPES, $sce) {
+                    if (currentReport.type === REPORT_TYPES.SUPERSET) {
+                        if (currentReport.embeddedUuid) {
+                            return null;
+                        }
+                        return $sce.trustAsResourceUrl(currentReport.url + '?standalone=true');
+                    }
+                    return $sce.trustAsResourceUrl(currentReport.url);
+                },
+                embeddedUuid: function(currentReport, REPORT_TYPES) {
+                    return currentReport.type === REPORT_TYPES.SUPERSET ? currentReport.embeddedUuid : null;
+                },
+                authorizationInSuperset: function(currentReport, REPORT_TYPES, loadingModalService,
+                    openlmisModalService, $q, $state, MODAL_CANCELLED) {
+                    // Embedded reports authorize via guest token; only legacy ones need the modal.
+                    if (currentReport.type !== REPORT_TYPES.SUPERSET || currentReport.embeddedUuid) {
+                        return $q.resolve();
+                    }
+                    loadingModalService.close();
+                    var dialog = openlmisModalService.createDialog({
+                        backdrop: 'static',
+                        keyboard: false,
+                        controller: 'SupersetOAuthLoginController',
+                        controllerAs: 'vm',
+                        templateUrl: 'openlmis-superset/superset-oauth-login.html',
+                        show: true
+                    });
+                    return dialog.promise
+                        .catch(function(reason) {
+                            if (reason === MODAL_CANCELLED) {
+                                $state.go('openlmis.reports.list');
+                                return $q.resolve();
+                            }
+                            return $q.reject();
+                        });
                 }
             }
         });

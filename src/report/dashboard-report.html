@@ -8,5 +8,6 @@
 <p ng-if="vm.isSupersetReport && !vm.authUrl && !vm.isReady && !vm.error" class="loading">
     {{ 'report.superset.loading' | message }}
 </p>
-<div ng-if="vm.isSupersetReport && !vm.authUrl" ng-show="vm.isReady" id="superset-embed-container" class="superset-embed-container"></div>
+<!-- ng-show, not ng-if: keep the SDK mount point in the DOM before embedDashboard() runs. -->
+<div ng-show="vm.isSupersetReport && !vm.authUrl && vm.isReady" id="superset-embed-container" class="superset-embed-container"></div>
 <iframe ng-if="!vm.isSupersetReport" seamless allowFullScreen="true" title="{{vm.reportName}}" ng-src="{{vm.reportUrl}}"></iframe>
