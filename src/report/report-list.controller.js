@@ -91,7 +91,7 @@
             });
 
             vm.dashboardReportsList.forEach(function(element) {
-                element['uisref'] = 'openlmis.reports.list.dashboard.' + element.id;
+                element['uisref'] = 'openlmis.reports.list.dashboard.view({reportId: \'' + element.id + '\'})';
                 vm.result[element.category.name].push(element);
             });
 

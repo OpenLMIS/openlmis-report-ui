@@ -25,7 +25,6 @@ describe('openlmis.reports.list state', function() {
             this.reportFactory = $injector.get('reportFactory');
             this.reportCategoryService = $injector.get('reportCategoryService');
             this.reportDashboardService = $injector.get('reportDashboardService');
-            this.dashboardReports = $injector.get('dashboardReports');
             this.$location = $injector.get('$location');
             this.REPORT_RIGHTS = $injector.get('REPORT_RIGHTS');
         });
@@ -76,7 +75,6 @@ describe('openlmis.reports.list state', function() {
         spyOn(this.reportFactory, 'getAllReports').andReturn(this.$q.resolve(this.jasperReports));
         spyOn(this.reportCategoryService, 'getAll').andReturn(this.$q.resolve(this.reportCategories));
         spyOn(this.reportDashboardService, 'getAllForUser').andReturn(this.$q.resolve(this.dashboardReportsList));
-        spyOn(this.dashboardReports, 'addReporingPages').andReturn(true);
 
         this.goToUrl = goToUrl;
         this.getResolvedValue = getResolvedValue;
@@ -98,6 +96,23 @@ describe('openlmis.reports.list state', function() {
         expect(this.getResolvedValue('jasperReports')).toEqual(this.jasperReports);
         expect(this.getResolvedValue('reportCategories')).toEqual(this.reportCategories.content);
         expect(this.getResolvedValue('dashboardReportsList')).toEqual(this.dashboardReportsList.content);
+    });
+
+    it('should register a static parameterized dashboard leaf state', function() {
+        var parent = this.$state.get('openlmis.reports.list.dashboard');
+        var leaf = this.$state.get('openlmis.reports.list.dashboard.view');
+
+        expect(parent.abstract).toBe(true);
+        expect(leaf).not.toBeNull();
+        expect(leaf.url).toEqual('/:reportId');
+    });
+
+    it('should resolve the dashboard by reportId from the URL', function() {
+        this.goToUrl('/reports/list/dashboard/id-four');
+
+        expect(this.$state.current.name).toEqual('openlmis.reports.list.dashboard.view');
+        expect(this.getResolvedValue('currentReport')).toEqual(this.dashboardReportsList.content[1]);
+        expect(this.getResolvedValue('reportName')).toEqual('Report 4');
     });
 
     function goToUrl(url) {
