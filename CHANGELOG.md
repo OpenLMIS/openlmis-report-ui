@@ -3,6 +3,10 @@ Upcoming Version (WIP)
 New functionality:
 * [MW-1449](https://openlmis.atlassian.net/browse/MW-1449): Replaced the Superset OAuth iframe with the Superset Embedded SDK for Superset reports that have an Embedded UUID configured. The legacy OAuth iframe path is preserved as a fallback when no Embedded UUID is set.
 
+Improvements:
+* SonarCloud now receives JS unit-test coverage (lcov) so the quality gate reflects real coverage on new code.
+* Feed sonar.projectVersion from project.properties so SonarCloud's New Code baseline tracks releases.
+
 5.2.15 / 2025-11-27
 ==================
 
