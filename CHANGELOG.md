@@ -10,6 +10,10 @@ Improvements:
 Bug fixes:
 * [OLMIS-8294](https://openlmis.atlassian.net/browse/OLMIS-8294): Pass sonar.projectVersion to the SonarCloud scanner through its args instead of appending it to sonar-project.properties during the build, so a missing trailing newline can no longer glue it onto the lcov report-path line and drop coverage to 0%.
 
+Improvements:
+* [ODRC-24](https://openlmis.atlassian.net/browse/ODRC-24) Attach language parameter to report request
+
+
 5.2.15 / 2025-11-27
 ==================
 
