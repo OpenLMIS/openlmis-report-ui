@@ -1,4 +1,4 @@
-Upcoming Version (WIP)
+5.3.0 / 2026-09-29
 ==================
 New functionality:
 * [MW-1449](https://openlmis.atlassian.net/browse/MW-1449): Replaced the Superset OAuth iframe with the Superset Embedded SDK for Superset reports that have an Embedded UUID configured. The legacy OAuth iframe path is preserved as a fallback when no Embedded UUID is set.
